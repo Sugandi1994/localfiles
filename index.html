@@ -1,0 +1,1013 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <title>Galeri Media - Gambar & Video</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <style>
+    body.dark .page-item.active .page-link {
+      background-color: #cc0000;
+      border-color: #cc0000;
+      color: #fff;
+    }
+
+    body.dark .page-link {
+      background-color: #2c2c2c;
+      color: #eaeaea;
+      border-color: #444;
+    }
+
+    body.dark .page-link:hover {
+      background-color: #444;
+      color: #fff;
+    }
+
+    :root {
+      --bg-color: #f9f9f9;
+      --text-color: #333;
+      --card-bg: #fff;
+      --shadow: rgba(0, 0, 0, 0.1);
+    }
+
+    body.dark {
+      padding-top: 80px;
+      --bg-color: #1e1e1e;
+      --text-color: #eaeaea;
+      --card-bg: #2c2c2c;
+      --shadow: rgba(255, 255, 255, 0.1);
+    }
+
+    body {
+      padding-top: 80px; /* Sesuaikan dengan tinggi navbar */
+      font-family: Arial, sans-serif;
+      background-color: var(--bg-color);
+      color: var(--text-color);
+      margin: 0;
+      padding: 20px;
+      transition: background-color 0.3s, color 0.3s;
+    }
+
+    h1 {
+      text-align: center;
+      color: #cc0000;
+    }
+
+    /*#controls {
+      text-align: center;
+      margin-bottom: 10px;
+    }*/
+
+    #folderInput {
+      display: block;
+      margin: 10px auto;
+    }
+
+    #searchInput, #mediaFilter, #toggleTheme {
+      display: grid;
+      padding: 1px;
+      margin: 1px;
+      font-size: 11px;
+    }
+
+    /*#toggleTheme {
+      cursor: pointer;
+      background: #cc0000;
+      color: #fff;
+      border: none;
+      border-radius: 5px;
+    }*/
+
+    #mediaList {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+      gap: 20px;
+      padding: 20px;
+      padding-top: 70px;
+    }
+
+    .media-card {
+      background: var(--card-bg);
+      border-radius: 8px;
+      box-shadow: 0 2px 6px var(--shadow);
+      overflow: hidden;
+      transition: transform 0.2s ease;
+      position: relative;
+    }
+
+    .media-card:hover {
+      transform: scale(1.02);
+    }
+
+    .media-card video,
+    .media-card img {
+      width: 100%;
+      height: 400px;
+      display: block;
+      background: #000;
+      cursor: pointer;
+      object-fit: cover;
+    }
+
+    .media-title {
+      padding: 10px;
+      font-size: 14px;
+      color: gray;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .file-ext {
+      position: absolute;
+      top: 8px;
+      right: 8px;
+      background-color: #cc0000;
+      color: white;
+      font-size: 12px;
+      padding: 2px 6px;
+      border-radius: 3px;
+      text-transform: uppercase;
+      font-weight: bold;
+      z-index: 10;
+      pointer-events: none;
+    }
+
+    .no-media {
+      text-align: center;
+      color: #666;
+      font-style: italic;
+    }
+
+    .slider-modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.8);
+      align-items: center;
+      justify-content: center;
+    }
+
+    .slider-modal img,
+    .slider-modal video {
+      max-width: 90%;
+      max-height: 80%;
+      margin: 10px;
+    }
+
+    .close-btn {
+      position: absolute;
+      top: 20px;
+      right: 20px;
+      font-size: 30px;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    .prev,
+    .next {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 40px;
+      color: #fff;
+      cursor: pointer;
+    }
+
+    .prev {
+      left: 10px;
+    }
+
+    .next {
+      right: 10px;
+    }
+
+    .play-btn {
+      position: absolute;
+      bottom: 50%;
+      left: 50%;
+      transform: translateX(-50%);
+      font-size: 20px;
+      color: #fff;
+      background-color: rgba(0, 0, 0, 0.7);
+      padding: 10px 20px;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    #backToTop {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: #cc0000;
+      color: #fff;
+      border: none;
+      padding: 10px 20px;
+      font-size: 16px;
+      border-radius: 5px;
+      cursor: pointer;
+      display: none;
+      z-index: 1000;
+    }
+
+    #backToTop:hover {
+      background-color: #990000;
+    }
+    /*body.dark .navbar {
+      background-color: #222;
+    }*/
+/*NAVBAR*/
+/*i {
+  margin-right: 10px;
+}*/
+/*----------bootstrap-navbar-css------------*/
+/*.navbar-logo{
+  padding: 15px;
+  color: #fff;
+}*/
+.navbar-mainbg{
+  background-color: #5161ce;
+  padding: 0px;
+  position: fixed;
+  top: 0;
+  width: 97%;
+  z-index: 999;
+}
+#navbarSupportedContent{
+  overflow: hidden;
+  position: relative;
+}
+#navbarSupportedContent ul{
+  padding: 0px;
+  margin: 0px;
+}
+/*#navbarSupportedContent ul li a i{
+  margin-right: 10px;
+}*/
+#navbarSupportedContent li {
+  list-style-type: none;
+  float: left;
+}
+#navbarSupportedContent ul li a{
+  color: rgba(255,255,255,0.5);
+  text-decoration: none;
+  font-size: 15px;
+  display: block;
+  padding: 20px 20px;
+  transition-duration:0.6s;
+  transition-timing-function: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  position: relative;
+}
+#navbarSupportedContent>ul>li.active>a{
+  color: #5161ce;
+  background-color: transparent;
+  transition: all 0.7s;
+}
+#navbarSupportedContent a:not(:only-child):after {
+  content: "\f105";
+  position: absolute;
+  right: 20px;
+  top: 10px;
+  font-size: 14px;
+  font-family: "Font Awesome 5 Free";
+  display: inline-block;
+  padding-right: 3px;
+  vertical-align: middle;
+  font-weight: 900;
+  transition: 0.5s;
+}
+#navbarSupportedContent .active>a:not(:only-child):after {
+  transform: rotate(90deg);
+}
+.hori-selector{
+  display:inline-block;
+  position:absolute;
+  height: 100%;
+  top: 0px;
+  left: 0px;
+  transition-duration:0.6s;
+  transition-timing-function: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  background-color: #fff;
+  border-top-left-radius: 15px;
+  border-top-right-radius: 15px;
+  margin-top: 10px;
+}
+.hori-selector .right,
+.hori-selector .left{
+  position: absolute;
+  width: 25px;
+  height: 25px;
+  background-color: #fff;
+  bottom: 10px;
+}
+.hori-selector .right{
+  right: -25px;
+}
+.hori-selector .left{
+  left: -25px;
+}
+.hori-selector .right:before,
+.hori-selector .left:before{
+  content: '';
+  position: absolute;
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: #5161ce;
+}
+.hori-selector .right:before{
+  bottom: 0;
+  right: -25px;
+}
+.hori-selector .left:before{
+  bottom: 0;
+  left: -25px;
+}
+
+
+@media(min-width: 992px){
+  /*.navbar-expand-custom {
+    -ms-flex-flow: row nowrap;
+    flex-flow: row nowrap;
+    -ms-flex-pack: start;
+    justify-content: flex-start;
+  }*/
+  .navbar-expand-custom .navbar-nav {
+    -ms-flex-direction: row;
+    flex-direction: row;
+  }
+  .navbar-expand-custom .navbar-toggler {
+    display: none;
+  }
+  .navbar-expand-custom .navbar-collapse {
+    display: -ms-flexbox!important;
+    display: flex!important;
+    -ms-flex-preferred-size: auto;
+    flex-basis: auto;
+  }
+}
+
+
+@media (max-width: 991px){
+  #navbarSupportedContent ul li a{
+    padding: 12px 30px;
+
+  }
+  .hori-selector{
+    margin-top: 0px;
+    margin-left: 10px;
+    border-radius: 0;
+    border-top-left-radius: 25px;
+    border-bottom-left-radius: 25px;
+  }
+  .hori-selector .left,
+  .hori-selector .right{
+    right: 10px;
+  }
+  .hori-selector .left{
+    top: -25px;
+    left: auto;
+  }
+  .hori-selector .right{
+    bottom: -25px;
+  }
+  .hori-selector .left:before{
+    left: -25px;
+    top: -25px;
+  }
+  .hori-selector .right:before{
+    bottom: -25px;
+    left: -25px;
+  }
+}
+/*NAVBAR*/
+/*TOGGEL*/
+
+body:has(.light-dark:checked) {
+  background: #252e48;
+} 
+@property --light-dark-toggle-x {
+  syntax: '<percentage>';
+  initial-value: 0%;
+  inherits: false;
+}
+
+.light-dark {
+
+  font-size: 1em;
+  appearance: none;
+  position: relative;
+  aspect-ratio: 2 / 1;
+  width: 4em;
+  background-image: linear-gradient(#0001, #0000, #0000, #0001);
+  background-color: #87b0ff;
+  border-radius: 100em;
+  transition: background-color 0.4s;
+
+  
+  &::before {
+    --light-dark-toggle-x: 0;
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 25%;
+    transform: translate(-50%, -50%);
+    height: 60%;
+    aspect-ratio: 1;
+    background: #ffc;
+    border-radius: 50%;
+    transition: all 0.5s, --light-dark-toggle-x 0.4s;
+    -webkit-mask: radial-gradient(circle at 20% var(--light-dark-toggle-x), #0000 var(--light-dark-toggle-x), #000 0);
+  }
+  
+  &::after {
+    content: "";
+    position: absolute;
+    width: 1em;
+    aspect-ratio: 1;
+    background: #fff;
+    border-radius: 50%;
+    left: 70%;
+    top: 40%;
+    transform: translate(-50%, -50%);
+    clip-path: polygon(-200% 0, 300% 0, 300% 80%, -200% 80%);
+    box-shadow: 
+    -0.5em 0.25em 0 -0.1em #fff,
+    0.5em 0.3em 0 -0.2em #fff,
+    0 0 0 0 #fff,
+    0 0 0 0 #fff,
+    0 0 0 0 #fff,
+    0 0 0 0 #fff,
+    0 0 0 0 #fff,
+    0 0 0 0 #fff;
+    transition: 
+    width 0.4s linear,
+    top 0.4s linear,
+    left 0.4s linear,
+    clip-path 0.2s linear,
+    box-shadow 0.3s cubic-bezier(.75,1.35,.75,.75)
+  }
+  
+  &:checked {
+    background-color: #131827;
+    
+    &::before {
+      left: 75%;
+      --light-dark-toggle-x: 35%;
+    }
+    
+    &::after {
+      width: 0.15em;
+      left: 33%;
+      top: 50%;
+      clip-path: polygon(-3000% -2000%, 2000% -2000%, 2000% 300%, -3000% 300%);
+      box-shadow: 
+      -0.5em 0.25em 0 -0.02em #fff,
+      0.5em 0.3em 0 -0.01em #fff,
+      0.7em -0.285em 0 -0.01em #fff,
+      0.74em -0.5em 0 -0.03em #fff,
+      -0.3em -0.35em 0 -0.02em #fff,
+
+      0 -0.06em 0 -0.04em #fff,
+      -0.04em 0.045em 0 -0.04em #fff,
+      0.05em 0.045em 0 -0.04em #fff;
+    }
+  }
+  
+  &[disabled] {
+    opacity: 0.25;
+  }
+}
+
+@media print {
+  .light-dark {
+    &, &::before, &::after {
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+      overflow: hidden;
+    }
+  }
+}
+
+@media (prefers-reduced-motion) {
+  .light-dark, .light-dark::before, .light-dark::after {
+    transition: none !important;
+    animation: none !important;
+    overflow: hidden;
+  }
+}
+/*TOGGEL*/
+</style>
+</head>
+<body>
+  <nav class="navbar navbar-expand-custom navbar-mainbg" style="">
+    <a class="navbar-brand text-danger fw-bold nav-link" href="#">📁 Galeri Media</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <div class="collapse navbar-collapse flex-wrap" id="navbarContent">
+      <ul class="navbar-nav me-auto">
+
+        <input type="file" id="folderInput" webkitdirectory multiple class="form-control form-control-sm mt-2 mt-lg-2" />
+
+
+        <input type="text" id="searchInput" class="form-control form-control-sm" placeholder="🔍 Cari nama file..." />
+
+        <select id="mediaFilter" class="form-select form-select-sm">
+          <option value="all">Semua</option>
+          <option value="image">Hanya Gambar</option>
+          <option value="video">Hanya Video</option>
+        </select>
+      </ul>
+
+      <div class="d-flex flex-wrap gap-2 mt-2 mt-lg-0 nav-link">
+
+
+<input type="checkbox" role="switch" class="light-dark" id="toggleTheme" />
+        <!-- <button id="toggleTheme" class="btn btn-danger btn-sm">🌙 Mode Gelap</button> -->
+      </div>
+    </div>
+  </nav>
+  
+  <!-- 
+  <h1>📁 Galeri Gambar & Video</h1>
+  <div id="controls">
+    <input type="file" id="folderInput" webkitdirectory multiple />
+    <input type="text" id="searchInput" placeholder="🔍 Cari nama file..." />
+    <select id="mediaFilter">
+      <option value="all">Semua</option>
+      <option value="image">Hanya Gambar</option>
+      <option value="video">Hanya Video</option>
+    </select>
+    <button id="toggleTheme">🌙 Mode Gelap</button>
+  </div> -->
+
+  <div id="mediaList"></div>
+  <div id="paginationControls" style="text-align: center; margin-bottom: 20px;"></div>
+  <div id="pageInfo" style="text-align: center; margin-bottom: 20px; font-size: 14px; color: gray;"></div>
+  <div id="sliderModal" class="slider-modal">
+    <span class="close-btn">&times;</span>
+    <video id="sliderVideo" controls style="display:none;"></video>
+    <img id="sliderImage" src="" alt="Slider Image" style="display:none;">
+    <button id="playBtn" class="play-btn" style="display:none;">Play</button>
+    <span class="prev">&#10094;</span>
+    <span class="next">&#10095;</span>
+  </div>
+
+  <button id="backToTop">Kembali ke Atas</button>
+
+  <script>
+    let currentPage = 1;
+    const itemsPerPage = 15;
+    let filteredFiles = [];
+    let currentIndex = 0;
+    let images = [], videos = [], allMediaFiles = [];
+
+    const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp'];
+    const videoExtensions = ['.ts', '.mov', '.mkv', '.mp4', '.webm', '.ogg'];
+
+    const isImage = file => file.type.startsWith("image/") || imageExtensions.some(ext => file.name.toLowerCase().endsWith(ext));
+    const isVideo = file => file.type.startsWith("video/") || videoExtensions.some(ext => file.name.toLowerCase().endsWith(ext));
+
+    document.getElementById("folderInput").addEventListener("change", function(event) {
+      const files = Array.from(event.target.files);
+      allMediaFiles = files.filter(file => isImage(file) || isVideo(file));
+
+      if (allMediaFiles.length === 0) {
+        alert("📂 Folder tidak berisi gambar atau video yang valid.");
+        return;
+      }
+
+      filterAndRenderMedia();
+    });
+
+    document.getElementById("searchInput").addEventListener("input", () => filterAndRenderMedia());
+    document.getElementById("mediaFilter").addEventListener("change", () => filterAndRenderMedia());
+
+    function filterAndRenderMedia() {
+      const keyword = document.getElementById("searchInput").value.toLowerCase();
+      const filter = document.getElementById("mediaFilter").value;
+
+      images = [];
+      videos = [];
+
+      filteredFiles = allMediaFiles.filter(file => {
+        const nameMatch = file.name.toLowerCase().includes(keyword);
+        const typeMatch = filter === "all" ||
+        (filter === "image" && isImage(file)) ||
+        (filter === "video" && isVideo(file));
+        return nameMatch && typeMatch;
+      });
+
+      renderPage(currentPage = 1);
+      renderPagination();
+    }
+
+    // function renderPage(page) {
+    //   currentPage = page;
+    //   const mediaContainer = document.getElementById("mediaList");
+    //   mediaContainer.innerHTML = "";
+
+    //   if (filteredFiles.length === 0) {
+    //     const empty = document.createElement("div");
+    //     empty.className = "no-media";
+    //     empty.textContent = "📂 Tidak ditemukan media yang cocok.";
+    //     mediaContainer.appendChild(empty);
+    //     return;
+    //   }
+
+    //   const start = (page - 1) * itemsPerPage;
+    //   const end = start + itemsPerPage;
+    //   const pageItems = filteredFiles.slice(start, end);
+
+    //   pageItems.forEach(file => {
+    //     const card = document.createElement("div");
+    //     card.className = "media-card";
+
+    //     const title = document.createElement("div");
+    //     title.className = "media-title";
+    //     title.textContent = file.name;
+
+    //     const ext = file.name.split('.').pop();
+    //     const badge = document.createElement("div");
+    //     badge.className = "file-ext";
+    //     badge.textContent = ext;
+    //     card.appendChild(badge);
+
+    //     if (isImage(file)) {
+    //       const img = document.createElement("img");
+    //       img.src = URL.createObjectURL(file);
+    //       img.loading = "lazy";
+    //       images.push(img.src);
+    //       img.addEventListener("click", () => openSliderImage(images.indexOf(img.src)));
+    //       card.appendChild(img);
+    //     } else if (isVideo(file)) {
+    //       const vid = document.createElement("video");
+    //       vid.src = URL.createObjectURL(file);
+    //       videos.push(vid.src);
+    //       vid.addEventListener("click", () => openSliderVideo(videos.indexOf(vid.src)));
+    //       card.appendChild(vid);
+    //     }
+
+    //     card.appendChild(title);
+    //     mediaContainer.appendChild(card);
+    //   });
+    // }
+    function renderPage(page) {
+      currentPage = page;
+      const mediaContainer = document.getElementById("mediaList");
+      mediaContainer.innerHTML = "";
+
+      if (filteredFiles.length === 0) {
+        const empty = document.createElement("div");
+        empty.className = "no-media";
+        empty.textContent = "📂 Tidak ditemukan media yang cocok.";
+        mediaContainer.appendChild(empty);
+        return;
+      }
+
+      const start = (page - 1) * itemsPerPage;
+      const end = start + itemsPerPage;
+      const pageItems = filteredFiles.slice(start, end);
+
+      pageItems.forEach(file => {
+        const card = document.createElement("div");
+        card.className = "media-card";
+
+        const ext = file.name.split('.').pop();
+        const badge = document.createElement("div");
+        badge.className = "file-ext";
+        badge.textContent = ext;
+        card.appendChild(badge);
+
+        if (isImage(file)) {
+          const img = document.createElement("img");
+          img.src = URL.createObjectURL(file);
+          img.loading = "lazy";
+          images.push(img.src);
+          img.addEventListener("click", () => openSliderImage(images.indexOf(img.src)));
+          card.appendChild(img);
+        } else if (isVideo(file)) {
+          const vid = document.createElement("video");
+          vid.src = URL.createObjectURL(file);
+          videos.push(vid.src);
+          vid.addEventListener("click", () => openSliderVideo(videos.indexOf(vid.src)));
+          card.appendChild(vid);
+        }
+
+        const name = document.createElement("div");
+        name.className = "media-title";
+        name.textContent = file.name;
+
+    // Container untuk path dan tombol copy
+        const pathContainer = document.createElement("div");
+        pathContainer.style.display = "flex";
+        pathContainer.style.alignItems = "center";
+        pathContainer.style.justifyContent = "space-between";
+        pathContainer.style.fontSize = "12px";
+        pathContainer.style.color = "gray";
+        pathContainer.style.padding = "0 10px 10px 10px";
+        pathContainer.style.gap = "6px";
+
+        const pathText = document.createElement("span");
+        pathText.textContent = file.webkitRelativePath;
+        pathText.style.flex = "1";
+        pathText.style.wordBreak = "break-all";
+
+        const copyButton = document.createElement("button");
+        copyButton.textContent = "📋";
+        copyButton.title = "Salin path";
+        copyButton.style.fontSize = "12px";
+        copyButton.style.cursor = "pointer";
+        copyButton.style.border = "none";
+        copyButton.style.background = "none";
+        copyButton.addEventListener("click", () => {
+          navigator.clipboard.writeText(file.webkitRelativePath).then(() => {
+            copyButton.textContent = "✅";
+            setTimeout(() => copyButton.textContent = "📋", 1500);
+          });
+        });
+
+        pathContainer.appendChild(pathText);
+        pathContainer.appendChild(copyButton);
+
+        card.appendChild(name);
+        card.appendChild(pathContainer);
+        mediaContainer.appendChild(card);
+      });
+    }
+
+
+
+
+    // function renderPagination() {
+    //   const pagination = document.getElementById("paginationControls");
+    //   pagination.innerHTML = "";
+
+    //   const totalPages = Math.ceil(filteredFiles.length / itemsPerPage);
+    //   if (totalPages <= 1) return;
+
+    //   for (let i = 1; i <= totalPages; i++) {
+    //     const btn = document.createElement("button");
+    //     btn.textContent = i;
+    //     btn.style.margin = "2px";
+    //     btn.style.padding = "5px 10px";
+    //     btn.style.border = "1px solid #ccc";
+    //     btn.style.borderRadius = "4px";
+    //     btn.style.backgroundColor = i === currentPage ? "#cc0000" : "#f0f0f0";
+    //     btn.style.color = i === currentPage ? "#fff" : "#333";
+    //     btn.addEventListener("click", () => {
+    //       renderPage(i);
+    //       renderPagination();
+    //     });
+    //     pagination.appendChild(btn);
+    //   }
+    // }
+    function renderPagination() {
+      const pagination = document.getElementById("paginationControls");
+      pagination.innerHTML = "";
+
+      const totalPages = Math.ceil(filteredFiles.length / itemsPerPage);
+      if (totalPages <= 1) return;
+
+      const nav = document.createElement("nav");
+      nav.setAttribute("aria-label", "Navigasi halaman media");
+
+      const ul = document.createElement("ul");
+      ul.className = "pagination justify-content-center flex-wrap";
+
+      const prevLi = document.createElement("li");
+      prevLi.className = `page-item ${currentPage === 1 ? "disabled" : ""}`;
+      const prevBtn = document.createElement("button");
+      prevBtn.className = "page-link";
+      prevBtn.textContent = "« Sebelumnya";
+      prevBtn.onclick = () => {
+        if (currentPage > 1) {
+          renderPage(currentPage - 1);
+          renderPagination();
+        }
+      };
+      prevLi.appendChild(prevBtn);
+      ul.appendChild(prevLi);
+
+      const maxButtons = 10;
+      let startPage = Math.max(1, currentPage - Math.floor(maxButtons / 2));
+      let endPage = startPage + maxButtons - 1;
+
+      if (endPage > totalPages) {
+        endPage = totalPages;
+        startPage = Math.max(1, endPage - maxButtons + 1);
+      }
+
+      for (let i = startPage; i <= endPage; i++) {
+        const li = document.createElement("li");
+        li.className = `page-item ${i === currentPage ? "active" : ""}`;
+        const btn = document.createElement("button");
+        btn.className = "page-link";
+        btn.textContent = i;
+        btn.onclick = () => {
+          renderPage(i);
+          renderPagination();
+        };
+        li.appendChild(btn);
+        ul.appendChild(li);
+      }
+
+      const nextLi = document.createElement("li");
+      nextLi.className = `page-item ${currentPage === totalPages ? "disabled" : ""}`;
+      const nextBtn = document.createElement("button");
+      nextBtn.className = "page-link";
+      nextBtn.textContent = "Berikutnya »";
+      nextBtn.onclick = () => {
+        if (currentPage < totalPages) {
+          renderPage(currentPage + 1);
+          renderPagination();
+        }
+      };
+      nextLi.appendChild(nextBtn);
+      ul.appendChild(nextLi);
+
+      nav.appendChild(ul);
+      pagination.appendChild(nav);
+
+  // Tambahkan info halaman di bawah pagination
+      document.getElementById("pageInfo").textContent = `Halaman ${currentPage} dari ${totalPages}`;
+    }
+
+
+// PAGINATION
+
+    function openSliderImage(index) {
+      currentIndex = index;
+      document.getElementById("sliderModal").style.display = "flex";
+      document.getElementById("sliderImage").src = images[currentIndex];
+      document.getElementById("sliderImage").style.display = "block";
+      document.getElementById("sliderVideo").style.display = "none";
+      document.getElementById("playBtn").style.display = "none";
+    }
+
+    function openSliderVideo(index) {
+      currentIndex = index;
+      const vid = document.getElementById("sliderVideo");
+      document.getElementById("sliderModal").style.display = "flex";
+      vid.src = videos[currentIndex];
+      vid.style.display = "block";
+      document.getElementById("sliderImage").style.display = "none";
+      document.getElementById("playBtn").style.display = "block";
+    }
+
+    document.querySelector(".close-btn").addEventListener("click", () => {
+      document.getElementById("sliderModal").style.display = "none";
+      const vid = document.getElementById("sliderVideo");
+      vid.pause();
+      vid.src = "";
+      document.getElementById("sliderImage").src = "";
+    });
+
+    document.querySelector(".prev").addEventListener("click", () => {
+      if (document.getElementById("sliderImage").style.display === "block") {
+        currentIndex = (currentIndex - 1 + images.length) % images.length;
+        document.getElementById("sliderImage").src = images[currentIndex];
+      } else {
+        currentIndex = (currentIndex - 1 + videos.length) % videos.length;
+        document.getElementById("sliderVideo").src = videos[currentIndex];
+        document.getElementById("sliderVideo").play();
+      }
+    });
+
+    document.querySelector(".next").addEventListener("click", () => {
+      if (document.getElementById("sliderImage").style.display === "block") {
+        currentIndex = (currentIndex + 1) % images.length;
+        document.getElementById("sliderImage").src = images[currentIndex];
+      } else {
+        currentIndex = (currentIndex + 1) % videos.length;
+        document.getElementById("sliderVideo").src = videos[currentIndex];
+        document.getElementById("sliderVideo").play();
+      }
+    });
+
+    document.getElementById("playBtn").addEventListener("click", function () {
+      const vid = document.getElementById("sliderVideo");
+      vid.play();
+      this.style.display = "none";
+    });
+
+    window.onscroll = () => {
+      document.getElementById("backToTop").style.display = window.scrollY > 200 ? "block" : "none";
+    };
+
+    document.getElementById("backToTop").addEventListener("click", () => {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    });
+
+    document.addEventListener("keydown", function (e) {
+      const modal = document.getElementById("sliderModal");
+      if (modal.style.display === "flex") {
+        if (e.key === "ArrowRight") document.querySelector(".next").click();
+        else if (e.key === "ArrowLeft") document.querySelector(".prev").click();
+        else if (e.key === "Escape") document.querySelector(".close-btn").click();
+      }
+    });
+
+    document.getElementById("toggleTheme").addEventListener("click", () => {
+      document.body.classList.toggle("dark");
+      const btn = document.getElementById("toggleTheme");
+      btn.textContent = document.body.classList.contains("dark") ? "☀️ Mode Terang" : "🌙 Mode Gelap";
+    });
+
+    // Menutup slider saat klik di luar media
+    document.getElementById("sliderModal").addEventListener("click", function (e) {
+  // Tutup hanya jika yang diklik adalah latar belakang modal, bukan media
+      if (e.target === this) {
+        document.querySelector(".close-btn").click();
+      }
+    });
+
+    // NAVBAR
+    // ---------Responsive-navbar-active-animation-----------
+    function test(){
+      var tabsNewAnim = $('#navbarSupportedContent');
+      var selectorNewAnim = $('#navbarSupportedContent').find('li').length;
+      var activeItemNewAnim = tabsNewAnim.find('.active');
+      var activeWidthNewAnimHeight = activeItemNewAnim.innerHeight();
+      var activeWidthNewAnimWidth = activeItemNewAnim.innerWidth();
+      var itemPosNewAnimTop = activeItemNewAnim.position();
+      var itemPosNewAnimLeft = activeItemNewAnim.position();
+      $(".hori-selector").css({
+        "top":itemPosNewAnimTop.top + "px", 
+        "left":itemPosNewAnimLeft.left + "px",
+        "height": activeWidthNewAnimHeight + "px",
+        "width": activeWidthNewAnimWidth + "px"
+      });
+      $("#navbarSupportedContent").on("click","li",function(e){
+        $('#navbarSupportedContent ul li').removeClass("active");
+        $(this).addClass('active');
+        var activeWidthNewAnimHeight = $(this).innerHeight();
+        var activeWidthNewAnimWidth = $(this).innerWidth();
+        var itemPosNewAnimTop = $(this).position();
+        var itemPosNewAnimLeft = $(this).position();
+        $(".hori-selector").css({
+          "top":itemPosNewAnimTop.top + "px", 
+          "left":itemPosNewAnimLeft.left + "px",
+          "height": activeWidthNewAnimHeight + "px",
+          "width": activeWidthNewAnimWidth + "px"
+        });
+      });
+    }
+    $(document).ready(function(){
+      setTimeout(function(){ test(); });
+    });
+    $(window).on('resize', function(){
+      setTimeout(function(){ test(); }, 500);
+    });
+    $(".navbar-toggler").click(function(){
+      $(".navbar-collapse").slideToggle(300);
+      setTimeout(function(){ test(); });
+    });
+
+
+
+// --------------add active class-on another-page move----------
+    jQuery(document).ready(function($){
+  // Get current path and find target link
+      var path = window.location.pathname.split("/").pop();
+
+  // Account for home page with empty path
+      if ( path == '' ) {
+        path = 'index.html';
+      }
+
+      var target = $('#navbarSupportedContent ul li a[href="'+path+'"]');
+  // Add active class to target link
+      target.parent().addClass('active');
+    });
+
+
+
+
+// Add active class on another page linked
+// ==========================================
+// $(window).on('load',function () {
+//     var current = location.pathname;
+//     console.log(current);
+//     $('#navbarSupportedContent ul li a').each(function(){
+//         var $this = $(this);
+//         // if the current path is like this link, make it active
+//         if($this.attr('href').indexOf(current) !== -1){
+//             $this.parent().addClass('active');
+//             $this.parents('.menu-submenu').addClass('show-dropdown');
+//             $this.parents('.menu-submenu').parent().addClass('active');
+//         }else{
+//             $this.parent().removeClass('active');
+//         }
+//     })
+// });
+// NAVBAR
+  </script>
+</body>
+</html>
