@@ -35,7 +35,7 @@
     body.dark {
       --bg-color: var(--dark-bg);
       --card-bg: var(--dark-card);
-      --border-color: var(--dark-border);
+      --border-color: --dark-border;
       --text-color: #f1f5f9;
       --text-secondary: #cbd5e1;
       --text-light: #94a3b8;
@@ -503,7 +503,7 @@
       font-size: 0.875rem;
     }
 
-    /* Modal Styles */
+    /* Modal Styles - Perbaikan untuk responsivitas */
     .modal {
       display: none;
       position: fixed;
@@ -513,21 +513,22 @@
       height: 100%;
       background-color: rgba(0, 0, 0, 0.8);
       z-index: 2000;
-      align-items: center;
-      justify-content: center;
       padding: 1rem;
+      overflow: auto;
     }
 
     .modal.active {
       display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .modal-content {
       background-color: var(--card-bg);
       border-radius: var(--radius);
       width: 100%;
-      max-width: 900px;
-      max-height: 90vh;
+      max-width: 95vw; /* Menggunakan viewport width */
+      max-height: 95vh; /* Menggunakan viewport height */
       overflow: hidden;
       box-shadow: var(--shadow-xl);
       display: flex;
@@ -535,17 +536,22 @@
     }
 
     .modal-header {
-      padding: 1.5rem;
+      padding: 1rem;
       border-bottom: 1px solid var(--border-color);
       display: flex;
       justify-content: space-between;
       align-items: center;
+      flex-shrink: 0;
     }
 
     .modal-title {
       font-weight: 600;
       font-size: 1.25rem;
       color: var(--text-color);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 70%;
     }
 
     .modal-close {
@@ -561,6 +567,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      flex-shrink: 0;
     }
 
     .modal-close:hover {
@@ -569,14 +576,15 @@
     }
 
     .modal-body {
-      padding: 1.5rem;
+      padding: 1rem;
       overflow-y: auto;
       flex: 1;
+      max-height: calc(95vh - 120px); /* Mengurangi tinggi maksimal */
     }
 
     .file-details {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       gap: 1rem;
       margin-bottom: 1.5rem;
     }
@@ -596,24 +604,29 @@
     .detail-value {
       font-weight: 500;
       color: var(--text-color);
+      word-break: break-all;
     }
 
     .file-preview-container {
-      margin-top: 1.5rem;
+      margin-top: 1rem;
       display: flex;
       justify-content: center;
+      align-items: center;
+      max-height: calc(95vh - 250px); /* Mengatur tinggi maksimal preview */
+      overflow: auto;
     }
 
     .file-preview-image {
       max-width: 100%;
-      max-height: 400px;
+      max-height: 100%;
       border-radius: var(--radius);
       box-shadow: var(--shadow-md);
+      object-fit: contain; /* Mengubah dari cover ke contain */
     }
 
     .file-preview-text {
       width: 100%;
-      max-height: 400px;
+      max-height: 100%;
       overflow-y: auto;
       background-color: var(--dark-bg);
       color: var(--text-color);
@@ -621,13 +634,15 @@
       border-radius: var(--radius);
       font-family: monospace;
       white-space: pre-wrap;
+      font-size: 0.875rem; /* Mengurangi ukuran font */
     }
 
     .modal-footer {
-      padding: 1.5rem;
+      padding: 1rem;
       border-top: 1px solid var(--border-color);
       display: flex;
       justify-content: flex-end;
+      flex-shrink: 0;
     }
 
     .btn {
@@ -651,7 +666,7 @@
       background-color: var(--secondary-color);
     }
 
-    /* Slider Modal */
+    /* Slider Modal - Perbaikan responsivitas */
     .slider-modal {
       position: fixed;
       top: 0;
@@ -663,6 +678,8 @@
       display: none;
       align-items: center;
       justify-content: center;
+      padding: 1rem;
+      overflow: auto;
     }
 
     .slider-modal.active {
@@ -671,23 +688,27 @@
 
     .slider-content {
       position: relative;
-      max-width: 90%;
-      max-height: 90%;
+      max-width: 95vw; /* Menggunakan viewport width */
+      max-height: 95vh; /* Menggunakan viewport height */
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
     .slider-image,
     .slider-video {
       max-width: 100%;
-      max-height: 80vh;
+      max-height: 95vh; /* Mengurangi tinggi maksimal */
       border-radius: var(--radius);
       box-shadow: var(--shadow-xl);
+      object-fit: contain; /* Mengubah dari cover ke contain */
     }
 
     .slider-close {
-      position: absolute;
+      position: fixed;
       top: 1rem;
       right: 1rem;
-      background: rgba(0, 0, 0, 0.5);
+      background: rgba(0, 0, 0, 0.7);
       color: white;
       border: none;
       width: 3rem;
@@ -699,6 +720,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      z-index: 10;
     }
 
     .slider-close:hover {
@@ -706,10 +728,10 @@
     }
 
     .slider-nav {
-      position: absolute;
+      position: fixed;
       top: 50%;
       transform: translateY(-50%);
-      background: rgba(0, 0, 0, 0.5);
+      background: rgba(0, 0, 0, 0.7);
       color: white;
       border: none;
       width: 3rem;
@@ -721,6 +743,7 @@
       display: flex;
       align-items: center;
       justify-content: center;
+      z-index: 10;
     }
 
     .slider-nav:hover {
@@ -736,7 +759,7 @@
     }
 
     .slider-play {
-      position: absolute;
+      position: fixed;
       bottom: 2rem;
       left: 50%;
       transform: translateX(-50%);
@@ -751,6 +774,7 @@
       display: flex;
       align-items: center;
       gap: 0.5rem;
+      z-index: 10;
     }
 
     .slider-play:hover {
@@ -883,6 +907,24 @@
 
       .file-details {
         grid-template-columns: 1fr;
+      }
+      
+      .modal-content {
+        max-width: 98vw;
+        max-height: 98vh;
+      }
+      
+      .modal-body {
+        max-height: calc(98vh - 120px);
+      }
+      
+      .file-preview-container {
+        max-height: calc(98vh - 250px);
+      }
+      
+      .slider-image,
+      .slider-video {
+        max-height: 85vh;
       }
     }
   </style>
