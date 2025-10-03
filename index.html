@@ -2,8 +2,9 @@
 <html lang="id">
 <head>
   <meta charset="UTF-8" />
-  <title>Galeri Media - Gambar & Video</title>
+  <title>Galeri Media - Semua Jenis File</title>
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 
   <style>
     body.dark .page-item.active .page-link {
@@ -39,7 +40,7 @@
     }
 
     body {
-      padding-top: 80px; /* Sesuaikan dengan tinggi navbar */
+      padding-top: 80px;
       font-family: Arial, sans-serif;
       background-color: var(--bg-color);
       color: var(--text-color);
@@ -53,11 +54,6 @@
       color: #cc0000;
     }
 
-    /*#controls {
-      text-align: center;
-      margin-bottom: 10px;
-    }*/
-
     #folderInput {
       display: block;
       margin: 10px auto;
@@ -69,14 +65,6 @@
       margin: 1px;
       font-size: 11px;
     }
-
-    /*#toggleTheme {
-      cursor: pointer;
-      background: #cc0000;
-      color: #fff;
-      border: none;
-      border-radius: 5px;
-    }*/
 
     #mediaList {
       display: grid;
@@ -217,294 +205,463 @@
     #backToTop:hover {
       background-color: #990000;
     }
-    /*body.dark .navbar {
-      background-color: #222;
-    }*/
-/*NAVBAR*/
-/*i {
-  margin-right: 10px;
-}*/
-/*----------bootstrap-navbar-css------------*/
-/*.navbar-logo{
-  padding: 15px;
-  color: #fff;
-}*/
-.navbar-mainbg{
-  background-color: #5161ce;
-  padding: 0px;
-  position: fixed;
-  top: 0;
-  width: 97%;
-  z-index: 999;
-}
-#navbarSupportedContent{
-  overflow: hidden;
-  position: relative;
-}
-#navbarSupportedContent ul{
-  padding: 0px;
-  margin: 0px;
-}
-/*#navbarSupportedContent ul li a i{
-  margin-right: 10px;
-}*/
-#navbarSupportedContent li {
-  list-style-type: none;
-  float: left;
-}
-#navbarSupportedContent ul li a{
-  color: rgba(255,255,255,0.5);
-  text-decoration: none;
-  font-size: 15px;
-  display: block;
-  padding: 20px 20px;
-  transition-duration:0.6s;
-  transition-timing-function: cubic-bezier(0.68, -0.55, 0.265, 1.55);
-  position: relative;
-}
-#navbarSupportedContent>ul>li.active>a{
-  color: #5161ce;
-  background-color: transparent;
-  transition: all 0.7s;
-}
-#navbarSupportedContent a:not(:only-child):after {
-  content: "\f105";
-  position: absolute;
-  right: 20px;
-  top: 10px;
-  font-size: 14px;
-  font-family: "Font Awesome 5 Free";
-  display: inline-block;
-  padding-right: 3px;
-  vertical-align: middle;
-  font-weight: 900;
-  transition: 0.5s;
-}
-#navbarSupportedContent .active>a:not(:only-child):after {
-  transform: rotate(90deg);
-}
-.hori-selector{
-  display:inline-block;
-  position:absolute;
-  height: 100%;
-  top: 0px;
-  left: 0px;
-  transition-duration:0.6s;
-  transition-timing-function: cubic-bezier(0.68, -0.55, 0.265, 1.55);
-  background-color: #fff;
-  border-top-left-radius: 15px;
-  border-top-right-radius: 15px;
-  margin-top: 10px;
-}
-.hori-selector .right,
-.hori-selector .left{
-  position: absolute;
-  width: 25px;
-  height: 25px;
-  background-color: #fff;
-  bottom: 10px;
-}
-.hori-selector .right{
-  right: -25px;
-}
-.hori-selector .left{
-  left: -25px;
-}
-.hori-selector .right:before,
-.hori-selector .left:before{
-  content: '';
-  position: absolute;
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  background-color: #5161ce;
-}
-.hori-selector .right:before{
-  bottom: 0;
-  right: -25px;
-}
-.hori-selector .left:before{
-  bottom: 0;
-  left: -25px;
-}
 
-
-@media(min-width: 992px){
-  /*.navbar-expand-custom {
-    -ms-flex-flow: row nowrap;
-    flex-flow: row nowrap;
-    -ms-flex-pack: start;
-    justify-content: flex-start;
-  }*/
-  .navbar-expand-custom .navbar-nav {
-    -ms-flex-direction: row;
-    flex-direction: row;
-  }
-  .navbar-expand-custom .navbar-toggler {
-    display: none;
-  }
-  .navbar-expand-custom .navbar-collapse {
-    display: -ms-flexbox!important;
-    display: flex!important;
-    -ms-flex-preferred-size: auto;
-    flex-basis: auto;
-  }
-}
-
-
-@media (max-width: 991px){
-  #navbarSupportedContent ul li a{
-    padding: 12px 30px;
-
-  }
-  .hori-selector{
-    margin-top: 0px;
-    margin-left: 10px;
-    border-radius: 0;
-    border-top-left-radius: 25px;
-    border-bottom-left-radius: 25px;
-  }
-  .hori-selector .left,
-  .hori-selector .right{
-    right: 10px;
-  }
-  .hori-selector .left{
-    top: -25px;
-    left: auto;
-  }
-  .hori-selector .right{
-    bottom: -25px;
-  }
-  .hori-selector .left:before{
-    left: -25px;
-    top: -25px;
-  }
-  .hori-selector .right:before{
-    bottom: -25px;
-    left: -25px;
-  }
-}
-/*NAVBAR*/
-/*TOGGEL*/
-
-body:has(.light-dark:checked) {
-  background: #252e48;
-} 
-@property --light-dark-toggle-x {
-  syntax: '<percentage>';
-  initial-value: 0%;
-  inherits: false;
-}
-
-.light-dark {
-
-  font-size: 1em;
-  appearance: none;
-  position: relative;
-  aspect-ratio: 2 / 1;
-  width: 4em;
-  background-image: linear-gradient(#0001, #0000, #0000, #0001);
-  background-color: #87b0ff;
-  border-radius: 100em;
-  transition: background-color 0.4s;
-
-  
-  &::before {
-    --light-dark-toggle-x: 0;
-    content: "";
-    position: absolute;
-    top: 50%;
-    left: 25%;
-    transform: translate(-50%, -50%);
-    height: 60%;
-    aspect-ratio: 1;
-    background: #ffc;
-    border-radius: 50%;
-    transition: all 0.5s, --light-dark-toggle-x 0.4s;
-    -webkit-mask: radial-gradient(circle at 20% var(--light-dark-toggle-x), #0000 var(--light-dark-toggle-x), #000 0);
-  }
-  
-  &::after {
-    content: "";
-    position: absolute;
-    width: 1em;
-    aspect-ratio: 1;
-    background: #fff;
-    border-radius: 50%;
-    left: 70%;
-    top: 40%;
-    transform: translate(-50%, -50%);
-    clip-path: polygon(-200% 0, 300% 0, 300% 80%, -200% 80%);
-    box-shadow: 
-    -0.5em 0.25em 0 -0.1em #fff,
-    0.5em 0.3em 0 -0.2em #fff,
-    0 0 0 0 #fff,
-    0 0 0 0 #fff,
-    0 0 0 0 #fff,
-    0 0 0 0 #fff,
-    0 0 0 0 #fff,
-    0 0 0 0 #fff;
-    transition: 
-    width 0.4s linear,
-    top 0.4s linear,
-    left 0.4s linear,
-    clip-path 0.2s linear,
-    box-shadow 0.3s cubic-bezier(.75,1.35,.75,.75)
-  }
-  
-  &:checked {
-    background-color: #131827;
-    
-    &::before {
-      left: 75%;
-      --light-dark-toggle-x: 35%;
+    /*NAVBAR*/
+    .navbar-mainbg{
+      background-color: #5161ce;
+      padding: 0px;
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 999;
     }
     
-    &::after {
-      width: 0.15em;
-      left: 33%;
-      top: 50%;
-      clip-path: polygon(-3000% -2000%, 2000% -2000%, 2000% 300%, -3000% 300%);
-      box-shadow: 
-      -0.5em 0.25em 0 -0.02em #fff,
-      0.5em 0.3em 0 -0.01em #fff,
-      0.7em -0.285em 0 -0.01em #fff,
-      0.74em -0.5em 0 -0.03em #fff,
-      -0.3em -0.35em 0 -0.02em #fff,
-
-      0 -0.06em 0 -0.04em #fff,
-      -0.04em 0.045em 0 -0.04em #fff,
-      0.05em 0.045em 0 -0.04em #fff;
-    }
-  }
-  
-  &[disabled] {
-    opacity: 0.25;
-  }
-}
-
-@media print {
-  .light-dark {
-    &, &::before, &::after {
-      -webkit-print-color-adjust: exact;
-      print-color-adjust: exact;
+    #navbarSupportedContent{
       overflow: hidden;
+      position: relative;
     }
-  }
-}
+    
+    #navbarSupportedContent ul{
+      padding: 0px;
+      margin: 0px;
+    }
+    
+    #navbarSupportedContent li {
+      list-style-type: none;
+      float: left;
+    }
+    
+    #navbarSupportedContent ul li a{
+      color: rgba(255,255,255,0.5);
+      text-decoration: none;
+      font-size: 15px;
+      display: block;
+      padding: 20px 20px;
+      transition-duration:0.6s;
+      transition-timing-function: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      position: relative;
+    }
+    
+    #navbarSupportedContent>ul>li.active>a{
+      color: #5161ce;
+      background-color: transparent;
+      transition: all 0.7s;
+    }
+    
+    #navbarSupportedContent a:not(:only-child):after {
+      content: "\f105";
+      position: absolute;
+      right: 20px;
+      top: 10px;
+      font-size: 14px;
+      font-family: "Font Awesome 5 Free";
+      display: inline-block;
+      padding-right: 3px;
+      vertical-align: middle;
+      font-weight: 900;
+      transition: 0.5s;
+    }
+    
+    #navbarSupportedContent .active>a:not(:only-child):after {
+      transform: rotate(90deg);
+    }
+    
+    .hori-selector{
+      display:inline-block;
+      position:absolute;
+      height: 100%;
+      top: 0px;
+      left: 0px;
+      transition-duration:0.6s;
+      transition-timing-function: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      background-color: #fff;
+      border-top-left-radius: 15px;
+      border-top-right-radius: 15px;
+      margin-top: 10px;
+    }
+    
+    .hori-selector .right,
+    .hori-selector .left{
+      position: absolute;
+      width: 25px;
+      height: 25px;
+      background-color: #fff;
+      bottom: 10px;
+    }
+    
+    .hori-selector .right{
+      right: -25px;
+    }
+    
+    .hori-selector .left{
+      left: -25px;
+    }
+    
+    .hori-selector .right:before,
+    .hori-selector .left:before{
+      content: '';
+      position: absolute;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      background-color: #5161ce;
+    }
+    
+    .hori-selector .right:before{
+      bottom: 0;
+      right: -25px;
+    }
+    
+    .hori-selector .left:before{
+      bottom: 0;
+      left: -25px;
+    }
 
-@media (prefers-reduced-motion) {
-  .light-dark, .light-dark::before, .light-dark::after {
-    transition: none !important;
-    animation: none !important;
-    overflow: hidden;
-  }
-}
-/*TOGGEL*/
-</style>
+    @media(min-width: 992px){
+      .navbar-expand-custom .navbar-nav {
+        -ms-flex-direction: row;
+        flex-direction: row;
+      }
+      .navbar-expand-custom .navbar-toggler {
+        display: none;
+      }
+      .navbar-expand-custom .navbar-collapse {
+        display: -ms-flexbox!important;
+        display: flex!important;
+        -ms-flex-preferred-size: auto;
+        flex-basis: auto;
+      }
+    }
+
+    @media (max-width: 991px){
+      #navbarSupportedContent ul li a{
+        padding: 12px 30px;
+      }
+      .hori-selector{
+        margin-top: 0px;
+        margin-left: 10px;
+        border-radius: 0;
+        border-top-left-radius: 25px;
+        border-bottom-left-radius: 25px;
+      }
+      .hori-selector .left,
+      .hori-selector .right{
+        right: 10px;
+      }
+      .hori-selector .left{
+        top: -25px;
+        left: auto;
+      }
+      .hori-selector .right{
+        bottom: -25px;
+      }
+      .hori-selector .left:before{
+        left: -25px;
+        top: -25px;
+      }
+      .hori-selector .right:before{
+        bottom: -25px;
+        left: -25px;
+      }
+    }
+
+    /*TOGGEL*/
+    body:has(.light-dark:checked) {
+      background: #252e48;
+    } 
+    
+    @property --light-dark-toggle-x {
+      syntax: '<percentage>';
+      initial-value: 0%;
+      inherits: false;
+    }
+
+    .light-dark {
+      font-size: 1em;
+      appearance: none;
+      position: relative;
+      aspect-ratio: 2 / 1;
+      width: 4em;
+      background-image: linear-gradient(#0001, #0000, #0000, #0001);
+      background-color: #87b0ff;
+      border-radius: 100em;
+      transition: background-color 0.4s;
+      
+      &::before {
+        --light-dark-toggle-x: 0;
+        content: "";
+        position: absolute;
+        top: 50%;
+        left: 25%;
+        transform: translate(-50%, -50%);
+        height: 60%;
+        aspect-ratio: 1;
+        background: #ffc;
+        border-radius: 50%;
+        transition: all 0.5s, --light-dark-toggle-x 0.4s;
+        -webkit-mask: radial-gradient(circle at 20% var(--light-dark-toggle-x), #0000 var(--light-dark-toggle-x), #000 0);
+      }
+      
+      &::after {
+        content: "";
+        position: absolute;
+        width: 1em;
+        aspect-ratio: 1;
+        background: #fff;
+        border-radius: 50%;
+        left: 70%;
+        top: 40%;
+        transform: translate(-50%, -50%);
+        clip-path: polygon(-200% 0, 300% 0, 300% 80%, -200% 80%);
+        box-shadow: 
+        -0.5em 0.25em 0 -0.1em #fff,
+        0.5em 0.3em 0 -0.2em #fff,
+        0 0 0 0 #fff,
+        0 0 0 0 #fff,
+        0 0 0 0 #fff,
+        0 0 0 0 #fff,
+        0 0 0 0 #fff,
+        0 0 0 0 #fff;
+        transition: 
+        width 0.4s linear,
+        top 0.4s linear,
+        left 0.4s linear,
+        clip-path 0.2s linear,
+        box-shadow 0.3s cubic-bezier(.75,1.35,.75,.75)
+      }
+      
+      &:checked {
+        background-color: #131827;
+        
+        &::before {
+          left: 75%;
+          --light-dark-toggle-x: 35%;
+        }
+        
+        &::after {
+          width: 0.15em;
+          left: 33%;
+          top: 50%;
+          clip-path: polygon(-3000% -2000%, 2000% -2000%, 2000% 300%, -3000% 300%);
+          box-shadow: 
+          -0.5em 0.25em 0 -0.02em #fff,
+          0.5em 0.3em 0 -0.01em #fff,
+          0.7em -0.285em 0 -0.01em #fff,
+          0.74em -0.5em 0 -0.03em #fff,
+          -0.3em -0.35em 0 -0.02em #fff,
+          0 -0.06em 0 -0.04em #fff,
+          -0.04em 0.045em 0 -0.04em #fff,
+          0.05em 0.045em 0 -0.04em #fff;
+        }
+      }
+      
+      &[disabled] {
+        opacity: 0.25;
+      }
+    }
+
+    @media print {
+      .light-dark {
+        &, &::before, &::after {
+          -webkit-print-color-adjust: exact;
+          print-color-adjust: exact;
+          overflow: hidden;
+        }
+      }
+    }
+
+    @media (prefers-reduced-motion) {
+      .light-dark, .light-dark::before, .light-dark::after {
+        transition: none !important;
+        animation: none !important;
+        overflow: hidden;
+      }
+    }
+
+    /* Tambahan untuk file non-media */
+    .file-preview {
+      width: 100%;
+      height: 400px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #f5f5f5;
+      cursor: pointer;
+      position: relative;
+    }
+
+    body.dark .file-preview {
+      background-color: #333;
+    }
+
+    .file-icon {
+      font-size: 80px;
+      color: #888;
+    }
+
+    .file-info {
+      position: absolute;
+      bottom: 10px;
+      left: 10px;
+      right: 10px;
+      background-color: rgba(0, 0, 0, 0.7);
+      color: white;
+      padding: 5px 10px;
+      border-radius: 4px;
+      font-size: 12px;
+      text-align: center;
+    }
+
+    .file-actions {
+      position: absolute;
+      top: 10px;
+      left: 10px;
+      display: flex;
+      gap: 5px;
+    }
+
+    .file-action-btn {
+      background-color: rgba(0, 0, 0, 0.7);
+      color: white;
+      border: none;
+      border-radius: 4px;
+      padding: 5px 10px;
+      font-size: 12px;
+      cursor: pointer;
+    }
+
+    .file-action-btn:hover {
+      background-color: rgba(0, 0, 0, 0.9);
+    }
+
+    .file-modal {
+      display: none;
+      position: fixed;
+      z-index: 1000;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.8);
+      align-items: center;
+      justify-content: center;
+    }
+
+    .file-modal-content {
+      background-color: var(--card-bg);
+      border-radius: 8px;
+      width: 90%;
+      max-width: 800px;
+      max-height: 80%;
+      overflow: auto;
+      padding: 20px;
+      position: relative;
+    }
+
+    .file-modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+      border-bottom: 1px solid #eee;
+      padding-bottom: 10px;
+    }
+
+    .file-modal-title {
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .file-modal-close {
+      font-size: 24px;
+      cursor: pointer;
+      color: #888;
+    }
+
+    .file-modal-body {
+      max-height: 60vh;
+      overflow: auto;
+    }
+
+    .file-details {
+      margin-bottom: 15px;
+    }
+
+    .file-details-row {
+      display: flex;
+      margin-bottom: 5px;
+    }
+
+    .file-details-label {
+      font-weight: bold;
+      width: 120px;
+    }
+
+    .file-details-value {
+      flex: 1;
+    }
+
+    .file-preview-container {
+      text-align: center;
+      margin-top: 15px;
+    }
+
+    .file-preview-image {
+      max-width: 100%;
+      max-height: 400px;
+      border: 1px solid #ddd;
+      border-radius: 4px;
+    }
+
+    .file-preview-text {
+      text-align: left;
+      background-color: #f5f5f5;
+      padding: 15px;
+      border-radius: 4px;
+      white-space: pre-wrap;
+      max-height: 400px;
+      overflow: auto;
+    }
+
+    body.dark .file-preview-text {
+      background-color: #333;
+    }
+
+    .file-download-btn {
+      background-color: #cc0000;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      padding: 8px 15px;
+      font-size: 14px;
+      cursor: pointer;
+      margin-top: 15px;
+    }
+
+    .file-download-btn:hover {
+      background-color: #990000;
+    }
+
+    /* Warna untuk berbagai jenis file */
+    .ext-pdf { background-color: #e74c3c !important; }
+    .ext-doc, .ext-docx { background-color: #2980b9 !important; }
+    .ext-xls, .ext-xlsx { background-color: #27ae60 !important; }
+    .ext-ppt, .ext-pptx { background-color: #d35400 !important; }
+    .ext-txt, .ext-md { background-color: #7f8c8d !important; }
+    .ext-zip, .ext-rar, .ext-7z { background-color: #9b59b6 !important; }
+    .ext-mp3, .ext-wav, .ext-flac { background-color: #1abc9c !important; }
+    .ext-exe { background-color: #e67e22 !important; }
+    .ext-html, .ext-htm { background-color: #f39c12 !important; }
+    .ext-css { background-color: #3498db !important; }
+    .ext-js { background-color: #f1c40f !important; }
+    .ext-json { background-color: #34495e !important; }
+    .ext-xml { background-color: #16a085 !important; }
+    .ext-sql { background-color: #2c3e50 !important; }
+    .ext-csv { background-color: #2ecc71 !important; }
+  </style>
 </head>
 <body>
-  <nav class="navbar navbar-expand-custom navbar-mainbg" style="">
+  <nav class="navbar navbar-expand-custom navbar-mainbg">
     <a class="navbar-brand text-danger fw-bold nav-link" href="#">📁 Galeri Media</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent">
       <span class="navbar-toggler-icon"></span>
@@ -512,44 +669,33 @@ body:has(.light-dark:checked) {
 
     <div class="collapse navbar-collapse flex-wrap" id="navbarContent">
       <ul class="navbar-nav me-auto">
-
         <input type="file" id="folderInput" webkitdirectory multiple class="form-control form-control-sm mt-2 mt-lg-2" />
-
-
         <input type="text" id="searchInput" class="form-control form-control-sm" placeholder="🔍 Cari nama file..." />
-
         <select id="mediaFilter" class="form-select form-select-sm">
           <option value="all">Semua</option>
-          <option value="image">Hanya Gambar</option>
-          <option value="video">Hanya Video</option>
+          <option value="image">Gambar</option>
+          <option value="video">Video</option>
+          <option value="document">Dokumen</option>
+          <option value="audio">Audio</option>
+          <option value="archive">Arsip</option>
+          <option value="other">Lainnya</option>
+        </select>
+        <select id="extensionFilter" class="form-select form-select-sm">
+          <option value="">Semua Ekstensi</option>
         </select>
       </ul>
 
       <div class="d-flex flex-wrap gap-2 mt-2 mt-lg-0 nav-link">
-
-
-<input type="checkbox" role="switch" class="light-dark" id="toggleTheme" />
-        <!-- <button id="toggleTheme" class="btn btn-danger btn-sm">🌙 Mode Gelap</button> -->
+        <input type="checkbox" role="switch" class="light-dark" id="toggleTheme" />
       </div>
     </div>
   </nav>
   
-  <!-- 
-  <h1>📁 Galeri Gambar & Video</h1>
-  <div id="controls">
-    <input type="file" id="folderInput" webkitdirectory multiple />
-    <input type="text" id="searchInput" placeholder="🔍 Cari nama file..." />
-    <select id="mediaFilter">
-      <option value="all">Semua</option>
-      <option value="image">Hanya Gambar</option>
-      <option value="video">Hanya Video</option>
-    </select>
-    <button id="toggleTheme">🌙 Mode Gelap</button>
-  </div> -->
-
   <div id="mediaList"></div>
   <div id="paginationControls" style="text-align: center; margin-bottom: 20px;"></div>
   <div id="pageInfo" style="text-align: center; margin-bottom: 20px; font-size: 14px; color: gray;"></div>
+  
+  <!-- Modal untuk gambar/video -->
   <div id="sliderModal" class="slider-modal">
     <span class="close-btn">&times;</span>
     <video id="sliderVideo" controls style="display:none;"></video>
@@ -557,6 +703,44 @@ body:has(.light-dark:checked) {
     <button id="playBtn" class="play-btn" style="display:none;">Play</button>
     <span class="prev">&#10094;</span>
     <span class="next">&#10095;</span>
+  </div>
+  
+  <!-- Modal untuk file non-media -->
+  <div id="fileModal" class="file-modal">
+    <div class="file-modal-content">
+      <div class="file-modal-header">
+        <div class="file-modal-title" id="fileModalTitle">Detail File</div>
+        <div class="file-modal-close" id="fileModalClose">&times;</div>
+      </div>
+      <div class="file-modal-body">
+        <div class="file-details">
+          <div class="file-details-row">
+            <div class="file-details-label">Nama File:</div>
+            <div class="file-details-value" id="fileModalName"></div>
+          </div>
+          <div class="file-details-row">
+            <div class="file-details-label">Ukuran:</div>
+            <div class="file-details-value" id="fileModalSize"></div>
+          </div>
+          <div class="file-details-row">
+            <div class="file-details-label">Tipe:</div>
+            <div class="file-details-value" id="fileModalType"></div>
+          </div>
+          <div class="file-details-row">
+            <div class="file-details-label">Dimodifikasi:</div>
+            <div class="file-details-value" id="fileModalModified"></div>
+          </div>
+          <div class="file-details-row">
+            <div class="file-details-label">Path:</div>
+            <div class="file-details-value" id="fileModalPath"></div>
+          </div>
+        </div>
+        <div class="file-preview-container" id="filePreviewContainer">
+          <!-- Preview akan ditambahkan secara dinamis -->
+        </div>
+        <button class="file-download-btn" id="fileDownloadBtn">Unduh File</button>
+      </div>
+    </div>
   </div>
 
   <button id="backToTop">Kembali ke Atas</button>
@@ -566,98 +750,186 @@ body:has(.light-dark:checked) {
     const itemsPerPage = 15;
     let filteredFiles = [];
     let currentIndex = 0;
-    let images = [], videos = [], allMediaFiles = [];
+    let images = [], videos = [], allFiles = [];
+    let uniqueExtensions = new Set();
 
-    const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp'];
-    const videoExtensions = ['.ts', '.mov', '.mkv', '.mp4', '.webm', '.ogg'];
+    // Kategori file
+    const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp', '.svg', '.ico'];
+    const videoExtensions = ['.ts', '.mov', '.mkv', '.mp4', '.webm', '.ogg', '.avi', '.flv', '.wmv'];
+    const documentExtensions = ['.pdf', '.doc', '.docx', '.xls', '.xlsx', '.ppt', '.pptx', '.txt', '.md', '.rtf'];
+    const audioExtensions = ['.mp3', '.wav', '.flac', '.aac', '.ogg', '.wma', '.m4a'];
+    const archiveExtensions = ['.zip', '.rar', '.7z', '.tar', '.gz', '.bz2'];
+    const textExtensions = ['.txt', '.md', '.json', '.xml', '.csv', '.html', '.htm', '.css', '.js', '.sql', '.py', '.java', '.c', '.cpp', '.h'];
 
-    const isImage = file => file.type.startsWith("image/") || imageExtensions.some(ext => file.name.toLowerCase().endsWith(ext));
-    const isVideo = file => file.type.startsWith("video/") || videoExtensions.some(ext => file.name.toLowerCase().endsWith(ext));
+    // Fungsi untuk menentukan kategori file
+    function getFileCategory(file) {
+      const ext = '.' + file.name.split('.').pop().toLowerCase();
+      
+      if (imageExtensions.includes(ext)) return 'image';
+      if (videoExtensions.includes(ext)) return 'video';
+      if (documentExtensions.includes(ext)) return 'document';
+      if (audioExtensions.includes(ext)) return 'audio';
+      if (archiveExtensions.includes(ext)) return 'archive';
+      
+      return 'other';
+    }
+
+    // Fungsi untuk menentukan apakah file adalah gambar
+    function isImage(file) {
+      return getFileCategory(file) === 'image';
+    }
+
+    // Fungsi untuk menentukan apakah file adalah video
+    function isVideo(file) {
+      return getFileCategory(file) === 'video';
+    }
+
+    // Fungsi untuk menentukan apakah file adalah dokumen
+    function isDocument(file) {
+      return getFileCategory(file) === 'document';
+    }
+
+    // Fungsi untuk menentukan apakah file adalah audio
+    function isAudio(file) {
+      return getFileCategory(file) === 'audio';
+    }
+
+    // Fungsi untuk menentukan apakah file adalah arsip
+    function isArchive(file) {
+      return getFileCategory(file) === 'archive';
+    }
+
+    // Fungsi untuk menentukan apakah file adalah teks
+    function isText(file) {
+      const ext = '.' + file.name.split('.').pop().toLowerCase();
+      return textExtensions.includes(ext);
+    }
+
+    // Fungsi untuk format ukuran file
+    function formatFileSize(bytes) {
+      if (bytes === 0) return '0 Bytes';
+      const k = 1024;
+      const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
+      const i = Math.floor(Math.log(bytes) / Math.log(k));
+      return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+    }
+
+    // Fungsi untuk mendapatkan ikon file berdasarkan ekstensi
+    function getFileIcon(extension) {
+      const ext = extension.toLowerCase();
+      
+      if (imageExtensions.includes('.' + ext)) return 'fa-image';
+      if (videoExtensions.includes('.' + ext)) return 'fa-video';
+      if (documentExtensions.includes('.' + ext)) {
+        if (ext === 'pdf') return 'fa-file-pdf';
+        if (['doc', 'docx'].includes(ext)) return 'fa-file-word';
+        if (['xls', 'xlsx'].includes(ext)) return 'fa-file-excel';
+        if (['ppt', 'pptx'].includes(ext)) return 'fa-file-powerpoint';
+        return 'fa-file-alt';
+      }
+      if (audioExtensions.includes('.' + ext)) return 'fa-file-audio';
+      if (archiveExtensions.includes('.' + ext)) return 'fa-file-archive';
+      if (textExtensions.includes('.' + ext)) return 'fa-file-code';
+      
+      return 'fa-file';
+    }
+
+    // Fungsi untuk membaca file teks
+    function readTextFile(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsText(file);
+      });
+    }
+
+    // Fungsi untuk membaca file sebagai data URL
+    function readFileAsDataURL(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+    }
 
     document.getElementById("folderInput").addEventListener("change", function(event) {
       const files = Array.from(event.target.files);
-      allMediaFiles = files.filter(file => isImage(file) || isVideo(file));
+      allFiles = files; // Simpan semua file, tidak hanya media
 
-      if (allMediaFiles.length === 0) {
-        alert("📂 Folder tidak berisi gambar atau video yang valid.");
+      if (allFiles.length === 0) {
+        alert("📂 Folder tidak berisi file.");
         return;
       }
 
+      // Reset ekstensi unik
+      uniqueExtensions = new Set();
+      
+      // Kumpulkan semua ekstensi unik dari file
+      allFiles.forEach(file => {
+        const ext = file.name.split('.').pop().toLowerCase();
+        uniqueExtensions.add(ext);
+      });
+      
+      // Update dropdown filter ekstensi
+      updateExtensionFilter();
+      
       filterAndRenderMedia();
     });
 
     document.getElementById("searchInput").addEventListener("input", () => filterAndRenderMedia());
     document.getElementById("mediaFilter").addEventListener("change", () => filterAndRenderMedia());
+    document.getElementById("extensionFilter").addEventListener("change", () => filterAndRenderMedia());
+
+    function updateExtensionFilter() {
+      const extensionFilter = document.getElementById("extensionFilter");
+      // Simpan nilai yang dipilih sekarang
+      const currentValue = extensionFilter.value;
+      
+      // Kosongkan dropdown kecuali opsi default
+      extensionFilter.innerHTML = '<option value="">Semua Ekstensi</option>';
+      
+      // Urutkan ekstensi secara alfabetis
+      const sortedExtensions = Array.from(uniqueExtensions).sort();
+      
+      // Tambahkan setiap ekstensi ke dropdown
+      sortedExtensions.forEach(ext => {
+        const option = document.createElement("option");
+        option.value = ext;
+        option.textContent = ext.toUpperCase();
+        extensionFilter.appendChild(option);
+      });
+      
+      // Kembalikan nilai yang dipilih sebelumnya jika masih ada
+      if (sortedExtensions.includes(currentValue)) {
+        extensionFilter.value = currentValue;
+      }
+    }
 
     function filterAndRenderMedia() {
       const keyword = document.getElementById("searchInput").value.toLowerCase();
       const filter = document.getElementById("mediaFilter").value;
+      const extensionFilter = document.getElementById("extensionFilter").value;
 
       images = [];
       videos = [];
 
-      filteredFiles = allMediaFiles.filter(file => {
+      filteredFiles = allFiles.filter(file => {
         const nameMatch = file.name.toLowerCase().includes(keyword);
-        const typeMatch = filter === "all" ||
-        (filter === "image" && isImage(file)) ||
-        (filter === "video" && isVideo(file));
-        return nameMatch && typeMatch;
+        const category = getFileCategory(file);
+        const typeMatch = filter === "all" || category === filter;
+        
+        const ext = file.name.split('.').pop().toLowerCase();
+        const extensionMatch = !extensionFilter || ext === extensionFilter;
+        
+        return nameMatch && typeMatch && extensionMatch;
       });
 
       renderPage(currentPage = 1);
       renderPagination();
     }
 
-    // function renderPage(page) {
-    //   currentPage = page;
-    //   const mediaContainer = document.getElementById("mediaList");
-    //   mediaContainer.innerHTML = "";
-
-    //   if (filteredFiles.length === 0) {
-    //     const empty = document.createElement("div");
-    //     empty.className = "no-media";
-    //     empty.textContent = "📂 Tidak ditemukan media yang cocok.";
-    //     mediaContainer.appendChild(empty);
-    //     return;
-    //   }
-
-    //   const start = (page - 1) * itemsPerPage;
-    //   const end = start + itemsPerPage;
-    //   const pageItems = filteredFiles.slice(start, end);
-
-    //   pageItems.forEach(file => {
-    //     const card = document.createElement("div");
-    //     card.className = "media-card";
-
-    //     const title = document.createElement("div");
-    //     title.className = "media-title";
-    //     title.textContent = file.name;
-
-    //     const ext = file.name.split('.').pop();
-    //     const badge = document.createElement("div");
-    //     badge.className = "file-ext";
-    //     badge.textContent = ext;
-    //     card.appendChild(badge);
-
-    //     if (isImage(file)) {
-    //       const img = document.createElement("img");
-    //       img.src = URL.createObjectURL(file);
-    //       img.loading = "lazy";
-    //       images.push(img.src);
-    //       img.addEventListener("click", () => openSliderImage(images.indexOf(img.src)));
-    //       card.appendChild(img);
-    //     } else if (isVideo(file)) {
-    //       const vid = document.createElement("video");
-    //       vid.src = URL.createObjectURL(file);
-    //       videos.push(vid.src);
-    //       vid.addEventListener("click", () => openSliderVideo(videos.indexOf(vid.src)));
-    //       card.appendChild(vid);
-    //     }
-
-    //     card.appendChild(title);
-    //     mediaContainer.appendChild(card);
-    //   });
-    // }
     function renderPage(page) {
       currentPage = page;
       const mediaContainer = document.getElementById("mediaList");
@@ -666,7 +938,7 @@ body:has(.light-dark:checked) {
       if (filteredFiles.length === 0) {
         const empty = document.createElement("div");
         empty.className = "no-media";
-        empty.textContent = "📂 Tidak ditemukan media yang cocok.";
+        empty.textContent = "📂 Tidak ditemukan file yang cocok.";
         mediaContainer.appendChild(empty);
         return;
       }
@@ -681,7 +953,7 @@ body:has(.light-dark:checked) {
 
         const ext = file.name.split('.').pop();
         const badge = document.createElement("div");
-        badge.className = "file-ext";
+        badge.className = "file-ext ext-" + ext.toLowerCase();
         badge.textContent = ext;
         card.appendChild(badge);
 
@@ -698,13 +970,42 @@ body:has(.light-dark:checked) {
           videos.push(vid.src);
           vid.addEventListener("click", () => openSliderVideo(videos.indexOf(vid.src)));
           card.appendChild(vid);
+        } else {
+          // Untuk file non-media, tampilkan preview
+          const preview = document.createElement("div");
+          preview.className = "file-preview";
+          
+          const icon = document.createElement("i");
+          icon.className = "fas " + getFileIcon(ext) + " file-icon";
+          preview.appendChild(icon);
+          
+          // Tambahkan informasi file
+          const fileInfo = document.createElement("div");
+          fileInfo.className = "file-info";
+          fileInfo.textContent = formatFileSize(file.size);
+          preview.appendChild(fileInfo);
+          
+          // Tambahkan tombol aksi
+          const fileActions = document.createElement("div");
+          fileActions.className = "file-actions";
+          
+          const viewBtn = document.createElement("button");
+          viewBtn.className = "file-action-btn";
+          viewBtn.textContent = "Lihat";
+          viewBtn.addEventListener("click", () => openFileModal(file));
+          fileActions.appendChild(viewBtn);
+          
+          preview.appendChild(fileActions);
+          
+          preview.addEventListener("click", () => openFileModal(file));
+          card.appendChild(preview);
         }
 
         const name = document.createElement("div");
         name.className = "media-title";
         name.textContent = file.name;
 
-    // Container untuk path dan tombol copy
+        // Container untuk path dan tombol copy
         const pathContainer = document.createElement("div");
         pathContainer.style.display = "flex";
         pathContainer.style.alignItems = "center";
@@ -742,32 +1043,6 @@ body:has(.light-dark:checked) {
       });
     }
 
-
-
-
-    // function renderPagination() {
-    //   const pagination = document.getElementById("paginationControls");
-    //   pagination.innerHTML = "";
-
-    //   const totalPages = Math.ceil(filteredFiles.length / itemsPerPage);
-    //   if (totalPages <= 1) return;
-
-    //   for (let i = 1; i <= totalPages; i++) {
-    //     const btn = document.createElement("button");
-    //     btn.textContent = i;
-    //     btn.style.margin = "2px";
-    //     btn.style.padding = "5px 10px";
-    //     btn.style.border = "1px solid #ccc";
-    //     btn.style.borderRadius = "4px";
-    //     btn.style.backgroundColor = i === currentPage ? "#cc0000" : "#f0f0f0";
-    //     btn.style.color = i === currentPage ? "#fff" : "#333";
-    //     btn.addEventListener("click", () => {
-    //       renderPage(i);
-    //       renderPagination();
-    //     });
-    //     pagination.appendChild(btn);
-    //   }
-    // }
     function renderPagination() {
       const pagination = document.getElementById("paginationControls");
       pagination.innerHTML = "";
@@ -835,12 +1110,9 @@ body:has(.light-dark:checked) {
       nav.appendChild(ul);
       pagination.appendChild(nav);
 
-  // Tambahkan info halaman di bawah pagination
+      // Tambahkan info halaman di bawah pagination
       document.getElementById("pageInfo").textContent = `Halaman ${currentPage} dari ${totalPages}`;
     }
-
-
-// PAGINATION
 
     function openSliderImage(index) {
       currentIndex = index;
@@ -861,12 +1133,75 @@ body:has(.light-dark:checked) {
       document.getElementById("playBtn").style.display = "block";
     }
 
+    // Fungsi untuk membuka modal file non-media
+    async function openFileModal(file) {
+      const ext = file.name.split('.').pop().toLowerCase();
+      
+      // Set informasi file
+      document.getElementById("fileModalName").textContent = file.name;
+      document.getElementById("fileModalSize").textContent = formatFileSize(file.size);
+      document.getElementById("fileModalType").textContent = file.type || ext.toUpperCase() + ' File';
+      document.getElementById("fileModalModified").textContent = new Date(file.lastModified).toLocaleString();
+      document.getElementById("fileModalPath").textContent = file.webkitRelativePath;
+      
+      // Set tombol unduh
+      const downloadBtn = document.getElementById("fileDownloadBtn");
+      downloadBtn.onclick = () => {
+        const url = URL.createObjectURL(file);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = file.name;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
+      };
+      
+      // Kosongkan container preview
+      const previewContainer = document.getElementById("filePreviewContainer");
+      previewContainer.innerHTML = '';
+      
+      // Tampilkan preview berdasarkan jenis file
+      if (isImage(file)) {
+        // Untuk gambar, tampilkan preview gambar
+        const img = document.createElement('img');
+        img.className = 'file-preview-image';
+        img.src = URL.createObjectURL(file);
+        previewContainer.appendChild(img);
+      } else if (isText(file)) {
+        // Untuk file teks, baca dan tampilkan kontennya
+        try {
+          const text = await readTextFile(file);
+          const textContainer = document.createElement('div');
+          textContainer.className = 'file-preview-text';
+          textContainer.textContent = text;
+          previewContainer.appendChild(textContainer);
+        } catch (error) {
+          const errorDiv = document.createElement('div');
+          errorDiv.textContent = 'Tidak dapat membaca file: ' + error.message;
+          previewContainer.appendChild(errorDiv);
+        }
+      } else {
+        // Untuk file lain, tampilkan informasi bahwa preview tidak tersedia
+        const noPreview = document.createElement('div');
+        noPreview.textContent = 'Preview tidak tersedia untuk jenis file ini. Silakan unduh file untuk melihat kontennya.';
+        previewContainer.appendChild(noPreview);
+      }
+      
+      // Tampilkan modal
+      document.getElementById("fileModal").style.display = "flex";
+    }
+
     document.querySelector(".close-btn").addEventListener("click", () => {
       document.getElementById("sliderModal").style.display = "none";
       const vid = document.getElementById("sliderVideo");
       vid.pause();
       vid.src = "";
       document.getElementById("sliderImage").src = "";
+    });
+
+    document.getElementById("fileModalClose").addEventListener("click", () => {
+      document.getElementById("fileModal").style.display = "none";
     });
 
     document.querySelector(".prev").addEventListener("click", () => {
@@ -906,30 +1241,36 @@ body:has(.light-dark:checked) {
     });
 
     document.addEventListener("keydown", function (e) {
-      const modal = document.getElementById("sliderModal");
-      if (modal.style.display === "flex") {
+      const sliderModal = document.getElementById("sliderModal");
+      const fileModal = document.getElementById("fileModal");
+      
+      if (sliderModal.style.display === "flex") {
         if (e.key === "ArrowRight") document.querySelector(".next").click();
         else if (e.key === "ArrowLeft") document.querySelector(".prev").click();
         else if (e.key === "Escape") document.querySelector(".close-btn").click();
+      } else if (fileModal.style.display === "flex") {
+        if (e.key === "Escape") document.getElementById("fileModalClose").click();
       }
     });
 
     document.getElementById("toggleTheme").addEventListener("click", () => {
       document.body.classList.toggle("dark");
-      const btn = document.getElementById("toggleTheme");
-      btn.textContent = document.body.classList.contains("dark") ? "☀️ Mode Terang" : "🌙 Mode Gelap";
     });
 
-    // Menutup slider saat klik di luar media
+    // Menutup modal saat klik di luar konten
     document.getElementById("sliderModal").addEventListener("click", function (e) {
-  // Tutup hanya jika yang diklik adalah latar belakang modal, bukan media
       if (e.target === this) {
         document.querySelector(".close-btn").click();
       }
     });
 
+    document.getElementById("fileModal").addEventListener("click", function (e) {
+      if (e.target === this) {
+        document.getElementById("fileModalClose").click();
+      }
+    });
+
     // NAVBAR
-    // ---------Responsive-navbar-active-animation-----------
     function test(){
       var tabsNewAnim = $('#navbarSupportedContent');
       var selectorNewAnim = $('#navbarSupportedContent').find('li').length;
@@ -959,55 +1300,33 @@ body:has(.light-dark:checked) {
         });
       });
     }
+    
     $(document).ready(function(){
       setTimeout(function(){ test(); });
     });
+    
     $(window).on('resize', function(){
       setTimeout(function(){ test(); }, 500);
     });
+    
     $(".navbar-toggler").click(function(){
       $(".navbar-collapse").slideToggle(300);
       setTimeout(function(){ test(); });
     });
 
-
-
-// --------------add active class-on another-page move----------
     jQuery(document).ready(function($){
-  // Get current path and find target link
+      // Get current path and find target link
       var path = window.location.pathname.split("/").pop();
 
-  // Account for home page with empty path
+      // Account for home page with empty path
       if ( path == '' ) {
         path = 'index.html';
       }
 
       var target = $('#navbarSupportedContent ul li a[href="'+path+'"]');
-  // Add active class to target link
+      // Add active class to target link
       target.parent().addClass('active');
     });
-
-
-
-
-// Add active class on another page linked
-// ==========================================
-// $(window).on('load',function () {
-//     var current = location.pathname;
-//     console.log(current);
-//     $('#navbarSupportedContent ul li a').each(function(){
-//         var $this = $(this);
-//         // if the current path is like this link, make it active
-//         if($this.attr('href').indexOf(current) !== -1){
-//             $this.parent().addClass('active');
-//             $this.parents('.menu-submenu').addClass('show-dropdown');
-//             $this.parents('.menu-submenu').parent().addClass('active');
-//         }else{
-//             $this.parent().removeClass('active');
-//         }
-//     })
-// });
-// NAVBAR
   </script>
 </body>
 </html>
