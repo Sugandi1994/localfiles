@@ -6,6 +6,7 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@10/swiper-bundle.min.css">
 
   <style>
     :root {
@@ -29,16 +30,20 @@
       --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
       --radius: 0.75rem;
       --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-      --navbar-height: 80px; /* Tinggi navbar yang diperhitungkan */
+      --navbar-height: 80px;
+      --glass-bg: rgba(255, 255, 255, 0.1);
+      --glass-border: rgba(255, 255, 255, 0.2);
     }
 
     body.dark {
       --bg-color: var(--dark-bg);
       --card-bg: var(--dark-card);
-      --border-color: --dark-border;
+      --border-color: var(--dark-border);
       --text-color: #f1f5f9;
       --text-secondary: #cbd5e1;
       --text-light: #94a3b8;
+      --glass-bg: rgba(30, 41, 59, 0.7);
+      --glass-border: rgba(255, 255, 255, 0.1);
     }
 
     body:not(.dark) {
@@ -61,8 +66,65 @@
       background-color: var(--bg-color);
       color: var(--text-color);
       transition: var(--transition);
-      padding-top: var(--navbar-height); /* Menggunakan variabel untuk padding top */
+      padding-top: var(--navbar-height);
       min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Parallax Background */
+    .parallax-bg {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+      opacity: 0.05;
+      transform: translateY(0);
+      transition: transform 0.5s ease-out;
+    }
+
+    /* Loading Screen */
+    .loading-screen {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: var(--bg-color);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+      transition: opacity 0.5s ease-out;
+    }
+
+    .loading-screen.hidden {
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .loading-spinner {
+      width: 60px;
+      height: 60px;
+      border: 4px solid rgba(37, 99, 235, 0.2);
+      border-top: 4px solid var(--primary-color);
+      border-radius: 50%;
+      animation: spin 1s linear infinite;
+      margin-bottom: 1rem;
+    }
+
+    .loading-text {
+      font-size: 1.2rem;
+      font-weight: 500;
+      color: var(--text-secondary);
+    }
+
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
     }
 
     /* Navbar Styles */
@@ -76,7 +138,8 @@
       z-index: 1000;
       backdrop-filter: blur(10px);
       border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-      height: var(--navbar-height); /* Tinggi navbar yang ditetapkan */
+      height: var(--navbar-height);
+      transition: var(--transition);
     }
 
     .navbar-container {
@@ -96,12 +159,17 @@
       display: flex;
       align-items: center;
       gap: 0.5rem;
+      transition: var(--transition);
+    }
+
+    .navbar-brand:hover {
+      transform: scale(1.05);
     }
 
     .navbar-controls {
       display: flex;
       align-items: center;
-      gap: 0.5rem; /* Mengurangi gap antar kontrol */
+      gap: 0.5rem;
       flex-wrap: wrap;
     }
 
@@ -110,25 +178,64 @@
       border: 1px solid var(--border-color);
       background-color: var(--card-bg);
       color: var(--text-color);
-      padding: 0.5rem 0.75rem; /* Mengurangi padding horizontal */
+      padding: 0.5rem 0.75rem;
       font-weight: 500;
       transition: var(--transition);
       box-shadow: var(--shadow-sm);
-      width: 120px; /* Mengatur lebar tetap untuk semua kontrol */
-      font-size: 0.875rem; /* Mengurangi ukuran font */
+      width: 120px;
+      font-size: 0.875rem;
     }
 
     .form-control:focus, .form-select:focus {
       border-color: var(--primary-color);
       box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
       outline: none;
+      transform: translateY(-2px);
+    }
+
+    /* Search Input with Suggestions */
+    .search-container {
+      position: relative;
+    }
+
+    .search-suggestions {
+      position: absolute;
+      top: 100%;
+      left: 0;
+      right: 0;
+      background-color: var(--card-bg);
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow-lg);
+      z-index: 100;
+      max-height: 200px;
+      overflow-y: auto;
+      display: none;
+    }
+
+    .search-suggestions.active {
+      display: block;
+    }
+
+    .suggestion-item {
+      padding: 0.5rem 0.75rem;
+      cursor: pointer;
+      transition: var(--transition);
+    }
+
+    .suggestion-item:hover {
+      background-color: rgba(37, 99, 235, 0.1);
+    }
+
+    .suggestion-item.highlighted {
+      background-color: rgba(37, 99, 235, 0.2);
     }
 
     /* Theme Toggle */
     .theme-toggle {
       position: relative;
-      width: 50px; /* Mengurangi ukuran toggle */
-      height: 25px; /* Mengurangi ukuran toggle */
+      width: 50px;
+      height: 25px;
       background-color: rgba(255, 255, 255, 0.2);
       border-radius: 25px;
       cursor: pointer;
@@ -137,10 +244,10 @@
 
     .theme-toggle-slider {
       position: absolute;
-      top: 2.5px; /* Menyesuaikan posisi */
-      left: 2.5px; /* Menyesuaikan posisi */
-      width: 20px; /* Mengurangi ukuran slider */
-      height: 20px; /* Mengurangi ukuran slider */
+      top: 2.5px;
+      left: 2.5px;
+      width: 20px;
+      height: 20px;
       background-color: white;
       border-radius: 50%;
       transition: var(--transition);
@@ -150,7 +257,7 @@
     }
 
     body.dark .theme-toggle-slider {
-      transform: translateX(25px); /* Menyesuaikan posisi */
+      transform: translateX(25px);
     }
 
     /* Main Content */
@@ -168,20 +275,36 @@
       display: flex;
       align-items: center;
       gap: 0.75rem;
+      position: relative;
+    }
+
+    .section-title::after {
+      content: '';
+      flex: 1;
+      height: 2px;
+      background: linear-gradient(to right, var(--primary-color), transparent);
+      margin-left: 1rem;
     }
 
     .section-title i {
       color: var(--primary-color);
     }
 
-    /* Filter Section */
+    /* Filter Section with Glassmorphism */
     .filter-section {
-      background-color: var(--card-bg);
+      background: var(--glass-bg);
+      backdrop-filter: blur(10px);
       border-radius: var(--radius);
       padding: 1.5rem;
       margin-bottom: 2rem;
       box-shadow: var(--shadow-md);
-      border: 1px solid var(--border-color);
+      border: 1px solid var(--glass-border);
+      transition: var(--transition);
+    }
+
+    .filter-section:hover {
+      transform: translateY(-2px);
+      box-shadow: var(--shadow-lg);
     }
 
     .filter-title {
@@ -211,7 +334,7 @@
       color: var(--text-secondary);
     }
 
-    /* Stats Section */
+    /* Stats Section with Enhanced Cards */
     .stats-container {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
@@ -230,17 +353,34 @@
       flex-direction: column;
       align-items: center;
       text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .stat-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 5px;
+      background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
     }
 
     .stat-card:hover {
       transform: translateY(-5px);
-      box-shadow: var(--shadow-lg);
+      box-shadow: var(--shadow-xl);
     }
 
     .stat-icon {
       font-size: 2rem;
       margin-bottom: 0.75rem;
       color: var(--primary-color);
+      transition: var(--transition);
+    }
+
+    .stat-card:hover .stat-icon {
+      transform: scale(1.1);
     }
 
     .stat-value {
@@ -256,7 +396,7 @@
       font-weight: 500;
     }
 
-    /* Media Grid */
+    /* Media Grid with Enhanced Cards */
     .media-grid {
       display: grid;
       grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -436,6 +576,7 @@
     .btn-view:hover {
       background-color: var(--primary-color);
       color: white;
+      transform: translateY(-2px);
     }
 
     .btn-copy {
@@ -446,13 +587,48 @@
     .btn-copy:hover {
       background-color: var(--success-color);
       color: white;
+      transform: translateY(-2px);
     }
 
-    /* Pagination */
+    /* Pagination Controls - Tambahan untuk items per page */
+    .pagination-wrapper {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 1rem;
+      margin: 2rem 0;
+    }
+
+    .items-per-page {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      color: var(--text-secondary);
+      font-size: 0.875rem;
+    }
+
+    .items-per-page select {
+      border-radius: var(--radius);
+      border: 1px solid var(--border-color);
+      background-color: var(--card-bg);
+      color: var(--text-color);
+      padding: 0.5rem 0.75rem;
+      font-weight: 500;
+      transition: var(--transition);
+      box-shadow: var(--shadow-sm);
+      font-size: 0.875rem;
+    }
+
+    .items-per-page select:focus {
+      border-color: var(--primary-color);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+      outline: none;
+    }
+
     .pagination-container {
       display: flex;
       justify-content: center;
-      margin: 2rem 0;
     }
 
     .pagination {
@@ -483,6 +659,7 @@
       background-color: var(--primary-color);
       color: white;
       border-color: var(--primary-color);
+      transform: translateY(-2px);
     }
 
     .page-item.active .page-link {
@@ -515,24 +692,37 @@
       z-index: 2000;
       padding: 1rem;
       overflow: auto;
+      backdrop-filter: blur(5px);
     }
 
     .modal.active {
       display: flex;
       align-items: center;
       justify-content: center;
+      animation: fadeIn 0.3s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
     }
 
     .modal-content {
       background-color: var(--card-bg);
       border-radius: var(--radius);
       width: 100%;
-      max-width: 90vw; /* Mengurangi ukuran maksimal */
-      max-height: 90vh; /* Mengurangi ukuran maksimal */
+      max-width: 90vw;
+      max-height: 90vh;
       overflow: hidden;
       box-shadow: var(--shadow-xl);
       display: flex;
       flex-direction: column;
+      animation: slideUp 0.3s ease-out;
+    }
+
+    @keyframes slideUp {
+      from { transform: translateY(50px); opacity: 0; }
+      to { transform: translateY(0); opacity: 1; }
     }
 
     .modal-header {
@@ -573,13 +763,14 @@
     .modal-close:hover {
       background-color: rgba(239, 68, 68, 0.1);
       color: var(--danger-color);
+      transform: rotate(90deg);
     }
 
     .modal-body {
       padding: 1rem;
       overflow-y: auto;
       flex: 1;
-      max-height: calc(90vh - 120px); /* Mengurangi tinggi maksimal */
+      max-height: calc(90vh - 120px);
     }
 
     .file-details {
@@ -612,9 +803,9 @@
       display: flex;
       justify-content: center;
       align-items: center;
-      max-height: calc(90vh - 250px); /* Mengatur tinggi maksimal preview */
+      max-height: calc(90vh - 250px);
       overflow: auto;
-      padding: 1rem; /* Menambahkan padding */
+      padding: 1rem;
     }
 
     .file-preview-image {
@@ -622,7 +813,7 @@
       max-height: 100%;
       border-radius: var(--radius);
       box-shadow: var(--shadow-md);
-      object-fit: contain; /* Mengubah dari cover ke contain */
+      object-fit: contain;
     }
 
     .file-preview-text {
@@ -635,7 +826,7 @@
       border-radius: var(--radius);
       font-family: monospace;
       white-space: pre-wrap;
-      font-size: 0.875rem; /* Mengurangi ukuran font */
+      font-size: 0.875rem;
     }
 
     .modal-footer {
@@ -665,58 +856,65 @@
 
     .btn-primary:hover {
       background-color: var(--secondary-color);
+      transform: translateY(-2px);
     }
 
-    /* Slider Modal - Perbaikan responsivitas */
+    /* Slider Modal - Ukuran seperti media player standar */
     .slider-modal {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background-color: rgba(0, 0, 0, 0.9);
+      background-color: rgba(0, 0, 0, 0.92);
       z-index: 2000;
       display: none;
       align-items: center;
       justify-content: center;
-      padding: 2rem; /* Menambah padding untuk ruang lebih */
-      overflow: auto;
+      overflow: hidden;
+      padding: 2rem;
+      backdrop-filter: blur(5px);
     }
 
     .slider-modal.active {
       display: flex;
+      animation: fadeIn 0.3s ease-out;
     }
 
     .slider-content {
       position: relative;
-      max-width: calc(100vw - 4rem); /* Mengurangi ukuran maksimal dengan memperhitungkan padding */
-      max-height: calc(100vh - 4rem); /* Mengurangi ukuran maksimal dengan memperhitungkan padding */
+      width: 900px;
+      height: 506px; /* 16:9 aspect ratio */
+      max-width: 90vw;
+      max-height: 80vh;
       display: flex;
       align-items: center;
       justify-content: center;
-      padding: 1rem; /* Menambah padding internal */
+      background-color: #000;
+      border-radius: var(--radius);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+      overflow: hidden;
     }
 
     .slider-image,
     .slider-video {
-      max-width: 100%;
-      max-height: calc(100vh - 8rem); /* Mengurangi tinggi maksimal untuk memberi ruang */
-      border-radius: var(--radius);
-      box-shadow: var(--shadow-xl);
-      object-fit: contain; /* Mengubah dari cover ke contain */
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
     }
 
     .slider-close {
-      position: fixed;
-      top: 2rem; /* Menambah jarak dari atas */
-      right: 2rem; /* Menambah jarak dari kanan */
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
       background: rgba(0, 0, 0, 0.7);
       color: white;
       border: none;
-      width: 3rem;
-      height: 3rem;
+      width: 2.5rem;
+      height: 2.5rem;
       border-radius: 50%;
-      font-size: 1.5rem;
+      font-size: 1.2rem;
       cursor: pointer;
       transition: var(--transition);
       display: flex;
@@ -727,10 +925,11 @@
 
     .slider-close:hover {
       background-color: rgba(239, 68, 68, 0.8);
+      transform: rotate(90deg);
     }
 
     .slider-nav {
-      position: fixed;
+      position: absolute;
       top: 50%;
       transform: translateY(-50%);
       background: rgba(0, 0, 0, 0.7);
@@ -739,7 +938,7 @@
       width: 3rem;
       height: 3rem;
       border-radius: 50%;
-      font-size: 1.5rem;
+      font-size: 1.2rem;
       cursor: pointer;
       transition: var(--transition);
       display: flex;
@@ -750,37 +949,266 @@
 
     .slider-nav:hover {
       background-color: rgba(37, 99, 235, 0.8);
+      transform: translateY(-50%) scale(1.1);
     }
 
     .slider-prev {
-      left: 2rem; /* Menambah jarak dari kiri */
+      left: 1rem;
     }
 
     .slider-next {
-      right: 2rem; /* Menambah jarak dari kanan */
+      right: 1rem;
     }
 
-    .slider-play {
-      position: fixed;
-      bottom: 3rem; /* Menambah jarak dari bawah */
-      left: 50%;
-      transform: translateX(-50%);
-      background: rgba(0, 0, 0, 0.7);
-      color: white;
-      border: none;
-      padding: 0.75rem 1.5rem;
-      border-radius: calc(var(--radius) / 2);
-      font-size: 1rem;
+    /* Enhanced Video Controls */
+    .video-controls {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+      padding: 1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      z-index: 5;
+    }
+
+    .slider-content:hover .video-controls {
+      opacity: 1;
+    }
+
+    .video-progress-container {
+      width: 100%;
+      height: 5px;
+      background-color: rgba(255, 255, 255, 0.3);
+      border-radius: 5px;
       cursor: pointer;
-      transition: var(--transition);
+      position: relative;
+    }
+
+    .video-progress {
+      height: 100%;
+      background-color: var(--primary-color);
+      border-radius: 5px;
+      width: 0%;
+      transition: width 0.1s linear;
+    }
+
+    .video-progress-buffered {
+      position: absolute;
+      top: 0;
+      left: 0;
+      height: 100%;
+      background-color: rgba(255, 255, 255, 0.5);
+      border-radius: 5px;
+      width: 0%;
+    }
+
+    .video-controls-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .video-controls-left,
+    .video-controls-right {
       display: flex;
       align-items: center;
       gap: 0.5rem;
+    }
+
+    .video-btn {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: var(--transition);
+      width: 2rem;
+      height: 2rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .video-btn:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .video-time {
+      color: white;
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+
+    .video-volume-container {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .video-volume-slider {
+      width: 80px;
+      height: 5px;
+      background-color: rgba(255, 255, 255, 0.3);
+      border-radius: 5px;
+      cursor: pointer;
+      position: relative;
+      display: none;
+    }
+
+    .video-volume-container:hover .video-volume-slider {
+      display: block;
+    }
+
+    .video-volume {
+      height: 100%;
+      background-color: var(--primary-color);
+      border-radius: 5px;
+      width: 70%;
+    }
+
+    .video-speed {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition);
+      padding: 0.25rem 0.5rem;
+      border-radius: calc(var(--radius) / 2);
+    }
+
+    .video-speed:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .video-speed-options {
+      position: absolute;
+      bottom: 3rem;
+      right: 1rem;
+      background-color: rgba(0, 0, 0, 0.8);
+      border-radius: var(--radius);
+      padding: 0.5rem;
+      display: none;
+      flex-direction: column;
+      gap: 0.25rem;
       z-index: 10;
     }
 
-    .slider-play:hover {
-      background-color: rgba(37, 99, 235, 0.8);
+    .video-speed-options.active {
+      display: flex;
+    }
+
+    .video-speed-option {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 0.875rem;
+      font-weight: 500;
+      cursor: pointer;
+      transition: var(--transition);
+      padding: 0.5rem;
+      border-radius: calc(var(--radius) / 2);
+      text-align: left;
+    }
+
+    .video-speed-option:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .video-speed-option.active {
+      background-color: var(--primary-color);
+    }
+
+    /* Enhanced Image Controls */
+    .image-controls {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: linear-gradient(to top, rgba(0, 0, 0, 0.8), transparent);
+      padding: 1rem;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      z-index: 5;
+    }
+
+    .slider-content:hover .image-controls {
+      opacity: 1;
+    }
+
+    .image-controls-left,
+    .image-controls-right {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .image-btn {
+      background: none;
+      border: none;
+      color: white;
+      font-size: 1rem;
+      cursor: pointer;
+      transition: var(--transition);
+      width: 2rem;
+      height: 2rem;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .image-btn:hover {
+      background-color: rgba(255, 255, 255, 0.2);
+    }
+
+    .image-zoom {
+      color: white;
+      font-size: 0.875rem;
+      font-weight: 500;
+    }
+
+    /* Media info overlay */
+    .media-info {
+      position: absolute;
+      top: 1rem;
+      left: 1rem;
+      background: rgba(0, 0, 0, 0.7);
+      color: white;
+      padding: 0.75rem 1rem;
+      border-radius: var(--radius);
+      opacity: 0;
+      transition: opacity 0.3s ease;
+      max-width: 80%;
+      z-index: 5;
+    }
+
+    .slider-content:hover .media-info {
+      opacity: 1;
+    }
+
+    .media-title-overlay {
+      font-size: 1rem;
+      font-weight: 500;
+      margin-bottom: 0.25rem;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .media-meta-overlay {
+      font-size: 0.875rem;
+      opacity: 0.8;
     }
 
     /* Back to Top Button */
@@ -855,6 +1283,194 @@
       margin: 0 auto;
     }
 
+    /* Floating Action Button */
+    .fab-container {
+      position: fixed;
+      bottom: 2rem;
+      left: 2rem;
+      z-index: 1000;
+    }
+
+    .fab {
+      width: 3.5rem;
+      height: 3.5rem;
+      border-radius: 50%;
+      background-color: var(--primary-color);
+      color: white;
+      border: none;
+      font-size: 1.5rem;
+      cursor: pointer;
+      box-shadow: var(--shadow-lg);
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin-bottom: 1rem;
+    }
+
+    .fab:hover {
+      background-color: var(--secondary-color);
+      transform: scale(1.1);
+    }
+
+    .fab-menu {
+      position: absolute;
+      bottom: 4.5rem;
+      left: 0;
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      opacity: 0;
+      visibility: hidden;
+      transition: var(--transition);
+    }
+
+    .fab-menu.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .fab-option {
+      width: 3rem;
+      height: 3rem;
+      border-radius: 50%;
+      background-color: var(--card-bg);
+      color: var(--text-color);
+      border: 1px solid var(--border-color);
+      font-size: 1.2rem;
+      cursor: pointer;
+      box-shadow: var(--shadow-md);
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .fab-option:hover {
+      background-color: var(--primary-color);
+      color: white;
+      transform: scale(1.1);
+    }
+
+    /* Slideshow Modal */
+    .slideshow-modal {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.92);
+      z-index: 2000;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      overflow: hidden;
+      padding: 2rem;
+      backdrop-filter: blur(5px);
+    }
+
+    .slideshow-modal.active {
+      display: flex;
+      animation: fadeIn 0.3s ease-out;
+    }
+
+    .slideshow-container {
+      position: relative;
+      width: 900px;
+      height: 506px; /* 16:9 aspect ratio */
+      max-width: 90vw;
+      max-height: 80vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background-color: #000;
+      border-radius: var(--radius);
+      box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+      overflow: hidden;
+    }
+
+    .slideshow-slide {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      opacity: 0;
+      transition: opacity 1s ease-in-out;
+    }
+
+    .slideshow-slide.active {
+      opacity: 1;
+    }
+
+    .slideshow-image,
+    .slideshow-video {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+      display: block;
+    }
+
+    .slideshow-controls {
+      position: absolute;
+      bottom: 1rem;
+      left: 0;
+      right: 0;
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      z-index: 10;
+    }
+
+    .slideshow-btn {
+      background: rgba(0, 0, 0, 0.7);
+      color: white;
+      border: none;
+      padding: 0.75rem 1.5rem;
+      border-radius: calc(var(--radius) / 2);
+      font-size: 1rem;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .slideshow-btn:hover {
+      background-color: rgba(37, 99, 235, 0.8);
+    }
+
+    .slideshow-progress {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      height: 3px;
+      background-color: var(--primary-color);
+      transition: width 0.1s linear;
+    }
+
+    .slideshow-close {
+      position: absolute;
+      top: 1rem;
+      right: 1rem;
+      background: rgba(0, 0, 0, 0.7);
+      color: white;
+      border: none;
+      width: 2.5rem;
+      height: 2.5rem;
+      border-radius: 50%;
+      font-size: 1.2rem;
+      cursor: pointer;
+      transition: var(--transition);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      z-index: 10;
+    }
+
+    .slideshow-close:hover {
+      background-color: rgba(239, 68, 68, 0.8);
+      transform: rotate(90deg);
+    }
+
     /* Responsive Design */
     @media (max-width: 992px) {
       .navbar-controls {
@@ -892,7 +1508,7 @@
       }
       
       body {
-        padding-top: 120px; /* Tinggi navbar di mobile */
+        padding-top: 120px;
       }
 
       .filter-controls {
@@ -923,41 +1539,195 @@
       .file-preview-container {
         max-height: calc(95vh - 250px);
       }
-      
+
+      /* Responsive untuk media viewer pada mobile */
       .slider-modal {
         padding: 1rem;
       }
       
       .slider-content {
+        width: 100%;
+        height: auto;
         max-width: calc(100vw - 2rem);
         max-height: calc(100vh - 2rem);
-      }
-      
-      .slider-image,
-      .slider-video {
-        max-height: calc(100vh - 6rem);
+        aspect-ratio: 16/9;
       }
       
       .slider-close {
-        top: 1rem;
-        right: 1rem;
+        top: 0.5rem;
+        right: 0.5rem;
+        width: 2rem;
+        height: 2rem;
+        font-size: 1rem;
       }
       
       .slider-prev {
-        left: 1rem;
+        left: 0.5rem;
+        width: 2.5rem;
+        height: 2.5rem;
+        font-size: 1rem;
       }
       
       .slider-next {
-        right: 1rem;
+        right: 0.5rem;
+        width: 2.5rem;
+        height: 2.5rem;
+        font-size: 1rem;
       }
       
-      .slider-play {
-        bottom: 2rem;
+      /* Responsive untuk video controls pada mobile */
+      .video-controls-left,
+      .video-controls-right {
+        gap: 0.25rem;
+      }
+      
+      .video-btn {
+        width: 1.8rem;
+        height: 1.8rem;
+        font-size: 0.875rem;
+      }
+      
+      .video-time {
+        font-size: 0.75rem;
+      }
+      
+      .video-volume-slider {
+        width: 60px;
+      }
+      
+      .video-speed {
+        font-size: 0.75rem;
+        padding: 0.2rem 0.4rem;
+      }
+      
+      /* Responsive untuk image controls pada mobile */
+      .image-controls-left,
+      .image-controls-right {
+        gap: 0.25rem;
+      }
+      
+      .image-btn {
+        width: 1.8rem;
+        height: 1.8rem;
+        font-size: 0.875rem;
+      }
+      
+      .image-zoom {
+        font-size: 0.75rem;
+      }
+
+      /* Responsive untuk pagination controls */
+      .pagination-wrapper {
+        flex-direction: column;
+        gap: 1rem;
+      }
+      
+      .items-per-page {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+
+    @media (max-width: 480px) {
+      /* Responsive untuk layar sangat kecil */
+      .slider-content {
+        max-width: calc(100vw - 1rem);
+        max-height: calc(100vh - 1rem);
+      }
+      
+      .slider-close {
+        top: 0.5rem;
+        right: 0.5rem;
+        width: 1.8rem;
+        height: 1.8rem;
+        font-size: 0.9rem;
+      }
+      
+      .slider-prev {
+        left: 0.5rem;
+        width: 2rem;
+        height: 2rem;
+        font-size: 0.9rem;
+      }
+      
+      .slider-next {
+        right: 0.5rem;
+        width: 2rem;
+        height: 2rem;
+        font-size: 0.9rem;
+      }
+      
+      /* Responsive untuk video controls pada layar sangat kecil */
+      .video-controls-left,
+      .video-controls-right {
+        gap: 0.2rem;
+      }
+      
+      .video-btn {
+        width: 1.5rem;
+        height: 1.5rem;
+        font-size: 0.75rem;
+      }
+      
+      .video-time {
+        font-size: 0.7rem;
+      }
+      
+      .video-volume-slider {
+        width: 50px;
+      }
+      
+      .video-speed {
+        font-size: 0.7rem;
+        padding: 0.15rem 0.3rem;
+      }
+      
+      /* Responsive untuk image controls pada layar sangat kecil */
+      .image-controls-left,
+      .image-controls-right {
+        gap: 0.2rem;
+      }
+      
+      .image-btn {
+        width: 1.5rem;
+        height: 1.5rem;
+        font-size: 0.75rem;
+      }
+      
+      .image-zoom {
+        font-size: 0.7rem;
       }
     }
   </style>
 </head>
 <body>
+  <!-- Loading Screen -->
+  <div class="loading-screen" id="loadingScreen">
+    <div class="loading-spinner"></div>
+    <div class="loading-text">Memuat Galeri Media...</div>
+  </div>
+
+  <!-- Parallax Background -->
+  <div class="parallax-bg" id="parallaxBg"></div>
+
+  <!-- Floating Action Button -->
+  <div class="fab-container">
+    <div class="fab-menu" id="fabMenu">
+      <button class="fab-option" id="fabSlideshow" title="Slideshow">
+        <i class="fas fa-play"></i>
+      </button>
+      <button class="fab-option" id="fabShare" title="Bagikan">
+        <i class="fas fa-share-alt"></i>
+      </button>
+      <button class="fab-option" id="fabExport" title="Ekspor">
+        <i class="fas fa-download"></i>
+      </button>
+    </div>
+    <button class="fab" id="fabToggle">
+      <i class="fas fa-plus"></i>
+    </button>
+  </div>
+
   <nav class="navbar">
     <div class="navbar-container">
       <a class="navbar-brand" href="#">
@@ -966,8 +1736,11 @@
       </a>
       
       <div class="navbar-controls">
+        <div class="search-container">
+          <input type="text" id="searchInput" class="form-control" placeholder="🔍" />
+          <div class="search-suggestions" id="searchSuggestions"></div>
+        </div>
         <input type="file" id="folderInput" webkitdirectory multiple class="form-control" />
-        <input type="text" id="searchInput" class="form-control" placeholder="🔍" />
         <select id="mediaFilter" class="form-select">
           <option value="all">Semua</option>
           <option value="image">Gambar</option>
@@ -1080,10 +1853,24 @@
     
     <div id="mediaList" class="media-grid"></div>
     
-    <div class="pagination-container">
-      <nav aria-label="Navigasi halaman">
-        <ul class="pagination" id="paginationControls"></ul>
-      </nav>
+    <!-- Pagination Controls dengan Items Per Page -->
+    <div class="pagination-wrapper">
+      <div class="items-per-page">
+        <label for="itemsPerPage">Tampilkan:</label>
+        <select id="itemsPerPage">
+          <option value="10">10</option>
+          <option value="25">25</option>
+          <option value="50">50</option>
+          <option value="100">100</option>
+          <option value="all">Semua</option>
+        </select>
+      </div>
+      
+      <div class="pagination-container">
+        <nav aria-label="Navigasi halaman">
+          <ul class="pagination" id="paginationControls"></ul>
+        </nav>
+      </div>
     </div>
     
     <div class="page-info" id="pageInfo"></div>
@@ -1095,18 +1882,89 @@
       <button class="slider-close" id="sliderClose">
         <i class="fas fa-times"></i>
       </button>
-      <video id="sliderVideo" controls style="display:none;"></video>
+      
+      <!-- Video Controls -->
+      <div class="video-controls" id="videoControls" style="display: none;">
+        <div class="video-progress-container" id="videoProgressContainer">
+          <div class="video-progress-buffered" id="videoProgressBuffered"></div>
+          <div class="video-progress" id="videoProgress"></div>
+        </div>
+        <div class="video-controls-row">
+          <div class="video-controls-left">
+            <button class="video-btn" id="videoPlayPause">
+              <i class="fas fa-play"></i>
+            </button>
+            <span class="video-time" id="videoCurrentTime">0:00</span>
+            <span>/</span>
+            <span class="video-time" id="videoDuration">0:00</span>
+          </div>
+          <div class="video-controls-right">
+            <div class="video-volume-container">
+              <button class="video-btn" id="videoVolumeBtn">
+                <i class="fas fa-volume-up"></i>
+              </button>
+              <div class="video-volume-slider">
+                <div class="video-volume" id="videoVolume"></div>
+              </div>
+            </div>
+            <button class="video-speed" id="videoSpeedBtn">1x</button>
+            <div class="video-speed-options" id="videoSpeedOptions">
+              <button class="video-speed-option" data-speed="0.25">0.25x</button>
+              <button class="video-speed-option" data-speed="0.5">0.5x</button>
+              <button class="video-speed-option" data-speed="0.75">0.75x</button>
+              <button class="video-speed-option active" data-speed="1">1x</button>
+              <button class="video-speed-option" data-speed="1.25">1.25x</button>
+              <button class="video-speed-option" data-speed="1.5">1.5x</button>
+              <button class="video-speed-option" data-speed="2">2x</button>
+            </div>
+            <button class="video-btn" id="videoFullscreen">
+              <i class="fas fa-expand"></i>
+            </button>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Image Controls -->
+      <div class="image-controls" id="imageControls" style="display: none;">
+        <div class="image-controls-left">
+          <button class="image-btn" id="imageZoomOut">
+            <i class="fas fa-search-minus"></i>
+          </button>
+          <span class="image-zoom" id="imageZoomLevel">100%</span>
+          <button class="image-btn" id="imageZoomIn">
+            <i class="fas fa-search-plus"></i>
+          </button>
+          <button class="image-btn" id="imageReset">
+            <i class="fas fa-compress"></i>
+          </button>
+        </div>
+        <div class="image-controls-right">
+          <button class="image-btn" id="imageRotateLeft">
+            <i class="fas fa-undo"></i>
+          </button>
+          <button class="image-btn" id="imageRotateRight">
+            <i class="fas fa-redo"></i>
+          </button>
+          <button class="image-btn" id="imageFullscreen">
+            <i class="fas fa-expand"></i>
+          </button>
+        </div>
+      </div>
+      
+      <video id="sliderVideo" style="display:none;"></video>
       <img id="sliderImage" src="" alt="Slider Image" style="display:none;">
-      <button id="playBtn" class="slider-play" style="display:none;">
-        <i class="fas fa-play"></i>
-        Putar
-      </button>
+      
       <button class="slider-nav slider-prev" id="sliderPrev">
         <i class="fas fa-chevron-left"></i>
       </button>
       <button class="slider-nav slider-next" id="sliderNext">
         <i class="fas fa-chevron-right"></i>
       </button>
+      
+      <div class="media-info">
+        <div class="media-title-overlay" id="mediaTitleOverlay"></div>
+        <div class="media-meta-overlay" id="mediaMetaOverlay"></div>
+      </div>
     </div>
   </div>
   
@@ -1155,18 +2013,68 @@
     </div>
   </div>
 
+  <!-- Slideshow Modal -->
+  <div id="slideshowModal" class="slideshow-modal">
+    <div class="slideshow-container">
+      <div class="slideshow-progress" id="slideshowProgress"></div>
+      <button class="slideshow-close" id="slideshowClose">
+        <i class="fas fa-times"></i>
+      </button>
+      <div id="slideshowSlides"></div>
+      <div class="slideshow-controls">
+        <button class="slideshow-btn" id="slideshowPlay">
+          <i class="fas fa-play"></i>
+          Putar
+        </button>
+        <button class="slideshow-btn" id="slideshowPause">
+          <i class="fas fa-pause"></i>
+          Jeda
+        </button>
+        <button class="slideshow-btn" id="slideshowFullscreen">
+          <i class="fas fa-expand"></i>
+          Layar Penuh
+        </button>
+      </div>
+    </div>
+  </div>
+
   <button class="back-to-top" id="backToTop">
     <i class="fas fa-arrow-up"></i>
   </button>
 
   <script>
     let currentPage = 1;
-    const itemsPerPage = 12;
+    let itemsPerPage = 12; // Default value
     let filteredFiles = [];
     let currentIndex = 0;
     let images = [], videos = [], allFiles = [];
     let uniqueExtensions = new Set();
     let fileMetadata = [];
+    let searchSuggestions = [];
+    let slideshowInterval;
+    let slideshowCurrentIndex = 0;
+    let slideshowItems = [];
+    let slideshowProgressInterval;
+    let slideshowProgress = 0;
+    
+    // Video control variables
+    let videoElement;
+    let isVideoPlaying = false;
+    let videoCurrentTime = 0;
+    let videoDuration = 0;
+    let videoVolume = 0.7;
+    let videoPlaybackRate = 1;
+    let isVideoFullscreen = false;
+    
+    // Image control variables
+    let imageElement;
+    let imageZoom = 1;
+    let imageRotation = 0;
+    let isImageDragging = false;
+    let imageDragStartX = 0;
+    let imageDragStartY = 0;
+    let imageTranslateX = 0;
+    let imageTranslateY = 0;
 
     // Kategori file
     const imageExtensions = ['.jpg', '.jpeg', '.png', '.gif', '.bmp', '.webp', '.svg', '.ico'];
@@ -1369,13 +2277,74 @@
       processFiles(files);
     });
 
-    document.getElementById("searchInput").addEventListener("input", () => filterAndRenderMedia());
+    // Search functionality with suggestions
+    document.getElementById("searchInput").addEventListener("input", function(e) {
+      const keyword = e.target.value.toLowerCase();
+      const suggestionsContainer = document.getElementById("searchSuggestions");
+      
+      if (keyword.length > 0) {
+        // Generate suggestions based on file names
+        searchSuggestions = fileMetadata
+          .filter(file => file.name.toLowerCase().includes(keyword))
+          .slice(0, 5)
+          .map(file => file.name);
+        
+        // Display suggestions
+        if (searchSuggestions.length > 0) {
+          suggestionsContainer.innerHTML = '';
+          searchSuggestions.forEach((suggestion, index) => {
+            const suggestionItem = document.createElement('div');
+            suggestionItem.className = 'suggestion-item';
+            suggestionItem.textContent = suggestion;
+            
+            // Highlight matching part
+            const regex = new RegExp(`(${keyword})`, 'gi');
+            suggestionItem.innerHTML = suggestion.replace(regex, '<span class="highlight">$1</span>');
+            
+            suggestionItem.addEventListener('click', () => {
+              document.getElementById('searchInput').value = suggestion;
+              suggestionsContainer.classList.remove('active');
+              filterAndRenderMedia();
+            });
+            
+            suggestionsContainer.appendChild(suggestionItem);
+          });
+          suggestionsContainer.classList.add('active');
+        } else {
+          suggestionsContainer.classList.remove('active');
+        }
+      } else {
+        suggestionsContainer.classList.remove('active');
+      }
+      
+      filterAndRenderMedia();
+    });
+
+    // Hide suggestions when clicking outside
+    document.addEventListener('click', function(e) {
+      if (!e.target.closest('.search-container')) {
+        document.getElementById('searchSuggestions').classList.remove('active');
+      }
+    });
+
     document.getElementById("mediaFilter").addEventListener("change", () => filterAndRenderMedia());
     document.getElementById("extensionFilter").addEventListener("change", () => filterAndRenderMedia());
     document.getElementById("sizeFilter").addEventListener("change", () => filterAndRenderMedia());
     document.getElementById("dateFilter").addEventListener("change", () => filterAndRenderMedia());
     document.getElementById("sortBy").addEventListener("change", () => filterAndRenderMedia());
     document.getElementById("sortOrder").addEventListener("change", () => filterAndRenderMedia());
+    
+    // Event listener untuk items per page
+    document.getElementById("itemsPerPage").addEventListener("change", function() {
+      const value = this.value;
+      if (value === 'all') {
+        itemsPerPage = filteredFiles.length;
+      } else {
+        itemsPerPage = parseInt(value);
+      }
+      currentPage = 1; // Reset ke halaman pertama
+      filterAndRenderMedia();
+    });
     
     document.getElementById("clearFilters").addEventListener("click", function() {
       document.getElementById("searchInput").value = "";
@@ -1680,8 +2649,18 @@
       const pagination = document.getElementById("paginationControls");
       pagination.innerHTML = "";
 
-      const totalPages = Math.ceil(filteredFiles.length / itemsPerPage);
-      if (totalPages <= 1) return;
+      // Hitung total halaman
+      let totalPages;
+      if (itemsPerPage >= filteredFiles.length) {
+        totalPages = 1;
+      } else {
+        totalPages = Math.ceil(filteredFiles.length / itemsPerPage);
+      }
+      
+      if (totalPages <= 1) {
+        document.getElementById("pageInfo").textContent = `Menampilkan ${filteredFiles.length} file`;
+        return;
+      }
 
       const prevLi = document.createElement("li");
       prevLi.className = `page-item ${currentPage === 1 ? "disabled" : ""}`;
@@ -1732,29 +2711,393 @@
         }
       };
       nextLi.appendChild(nextBtn);
-      pagination.appendChild(nextLi);
+      pagination.appendChild(nextBtn);
 
-      // Tambahkan info halaman di bawah pagination
-      document.getElementById("pageInfo").textContent = `Menampilkan ${((currentPage - 1) * itemsPerPage) + 1}-${Math.min(currentPage * itemsPerPage, filteredFiles.length)} dari ${filteredFiles.length} file`;
+      // Update info halaman
+      const start = (currentPage - 1) * itemsPerPage + 1;
+      const end = Math.min(currentPage * itemsPerPage, filteredFiles.length);
+      document.getElementById("pageInfo").textContent = `Menampilkan ${start}-${end} dari ${filteredFiles.length} file`;
     }
 
     function openSliderImage(index) {
       currentIndex = index;
+      const metadata = filteredFiles[images.length > 0 ? index : 0];
+      
+      // Update media info
+      document.getElementById("mediaTitleOverlay").textContent = metadata.name;
+      document.getElementById("mediaMetaOverlay").textContent = `${metadata.sizeFormatted} • ${metadata.dimensions || ''}`;
+      
+      // Show image controls and hide video controls
+      document.getElementById("imageControls").style.display = "flex";
+      document.getElementById("videoControls").style.display = "none";
+      
       document.getElementById("sliderModal").classList.add("active");
-      document.getElementById("sliderImage").src = images[currentIndex];
-      document.getElementById("sliderImage").style.display = "block";
+      
+      // Set image element
+      imageElement = document.getElementById("sliderImage");
+      imageElement.src = images[currentIndex];
+      imageElement.style.display = "block";
+      imageElement.style.transform = `scale(${imageZoom}) rotate(${imageRotation}deg) translate(${imageTranslateX}px, ${imageTranslateY}px)`;
+      
       document.getElementById("sliderVideo").style.display = "none";
-      document.getElementById("playBtn").style.display = "none";
+      
+      // Reset image controls
+      resetImageControls();
     }
 
     function openSliderVideo(index) {
       currentIndex = index;
-      const vid = document.getElementById("sliderVideo");
+      const metadata = filteredFiles[videos.length > 0 ? index : 0];
+      
+      // Update media info
+      document.getElementById("mediaTitleOverlay").textContent = metadata.name;
+      document.getElementById("mediaMetaOverlay").textContent = `${metadata.sizeFormatted} • ${metadata.dimensions || ''}`;
+      
+      // Show video controls and hide image controls
+      document.getElementById("videoControls").style.display = "flex";
+      document.getElementById("imageControls").style.display = "none";
+      
       document.getElementById("sliderModal").classList.add("active");
-      vid.src = videos[currentIndex];
-      vid.style.display = "block";
+      
+      // Set video element
+      videoElement = document.getElementById("sliderVideo");
+      videoElement.src = videos[currentIndex];
+      videoElement.style.display = "block";
+      
+      // Reset video controls
+      resetVideoControls();
+      
+      // Setup video event listeners
+      setupVideoEventListeners();
+      
       document.getElementById("sliderImage").style.display = "none";
-      document.getElementById("playBtn").style.display = "block";
+    }
+
+    function resetVideoControls() {
+      // Reset video state
+      isVideoPlaying = false;
+      videoCurrentTime = 0;
+      videoDuration = 0;
+      videoVolume = 0.7;
+      videoPlaybackRate = 1;
+      isVideoFullscreen = false;
+      
+      // Update UI
+      document.getElementById("videoPlayPause").innerHTML = '<i class="fas fa-play"></i>';
+      document.getElementById("videoCurrentTime").textContent = "0:00";
+      document.getElementById("videoDuration").textContent = "0:00";
+      document.getElementById("videoVolume").style.width = "70%";
+      document.getElementById("videoSpeedBtn").textContent = "1x";
+      
+      // Reset speed options
+      document.querySelectorAll(".video-speed-option").forEach(option => {
+        option.classList.remove("active");
+        if (option.dataset.speed === "1") {
+          option.classList.add("active");
+        }
+      });
+    }
+
+    function setupVideoEventListeners() {
+      // Play/Pause button
+      document.getElementById("videoPlayPause").addEventListener("click", toggleVideoPlayPause);
+      
+      // Progress bar
+      document.getElementById("videoProgressContainer").addEventListener("click", seekVideo);
+      
+      // Volume controls
+      document.getElementById("videoVolumeBtn").addEventListener("click", toggleVideoMute);
+      document.getElementById("videoVolume").addEventListener("click", changeVideoVolume);
+      
+      // Speed controls
+      document.getElementById("videoSpeedBtn").addEventListener("click", toggleVideoSpeedOptions);
+      document.querySelectorAll(".video-speed-option").forEach(option => {
+        option.addEventListener("click", changeVideoSpeed);
+      });
+      
+      // Fullscreen
+      document.getElementById("videoFullscreen").addEventListener("click", toggleVideoFullscreen);
+      
+      // Video events
+      videoElement.addEventListener("timeupdate", updateVideoProgress);
+      videoElement.addEventListener("loadedmetadata", updateVideoDuration);
+      videoElement.addEventListener("progress", updateVideoBuffered);
+      videoElement.addEventListener("ended", onVideoEnded);
+      videoElement.addEventListener("volumechange", updateVolumeUI);
+      videoElement.addEventListener("play", () => {
+        isVideoPlaying = true;
+        document.getElementById("videoPlayPause").innerHTML = '<i class="fas fa-pause"></i>';
+      });
+      videoElement.addEventListener("pause", () => {
+        isVideoPlaying = false;
+        document.getElementById("videoPlayPause").innerHTML = '<i class="fas fa-play"></i>';
+      });
+      
+      // Set initial volume
+      videoElement.volume = videoVolume;
+    }
+
+    function toggleVideoPlayPause() {
+      if (isVideoPlaying) {
+        videoElement.pause();
+      } else {
+        videoElement.play();
+      }
+    }
+
+    function seekVideo(e) {
+      const progressBar = document.getElementById("videoProgressContainer");
+      const clickPosition = (e.clientX - progressBar.getBoundingClientRect().left) / progressBar.offsetWidth;
+      videoElement.currentTime = clickPosition * videoDuration;
+    }
+
+    function updateVideoProgress() {
+      videoCurrentTime = videoElement.currentTime;
+      const progressPercent = (videoCurrentTime / videoDuration) * 100;
+      document.getElementById("videoProgress").style.width = `${progressPercent}%`;
+      document.getElementById("videoCurrentTime").textContent = formatTime(videoCurrentTime);
+    }
+
+    function updateVideoDuration() {
+      videoDuration = videoElement.duration;
+      document.getElementById("videoDuration").textContent = formatTime(videoDuration);
+    }
+
+    function updateVideoBuffered() {
+      if (videoElement.buffered.length > 0) {
+        const bufferedEnd = videoElement.buffered.end(videoElement.buffered.length - 1);
+        const bufferedPercent = (bufferedEnd / videoDuration) * 100;
+        document.getElementById("videoProgressBuffered").style.width = `${bufferedPercent}%`;
+      }
+    }
+
+    function onVideoEnded() {
+      isVideoPlaying = false;
+      document.getElementById("videoPlayPause").innerHTML = '<i class="fas fa-play"></i>';
+      
+      // Auto-play next video if available
+      if (currentIndex < videos.length - 1) {
+        setTimeout(() => {
+          document.getElementById("sliderNext").click();
+        }, 1000);
+      }
+    }
+
+    function toggleVideoMute() {
+      videoElement.muted = !videoElement.muted;
+      const volumeBtn = document.getElementById("videoVolumeBtn");
+      
+      if (videoElement.muted) {
+        volumeBtn.innerHTML = '<i class="fas fa-volume-mute"></i>';
+      } else {
+        volumeBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
+      }
+    }
+
+    function changeVideoVolume(e) {
+      const volumeSlider = document.getElementById("videoVolume");
+      const clickPosition = (e.clientX - volumeSlider.getBoundingClientRect().left) / volumeSlider.offsetWidth;
+      videoVolume = Math.max(0, Math.min(1, clickPosition));
+      videoElement.volume = videoVolume;
+      volumeSlider.style.width = `${videoVolume * 100}%`;
+    }
+
+    function updateVolumeUI() {
+      const volumeBtn = document.getElementById("videoVolumeBtn");
+      const volumeSlider = document.getElementById("videoVolume");
+      
+      if (videoElement.muted || videoElement.volume === 0) {
+        volumeBtn.innerHTML = '<i class="fas fa-volume-mute"></i>';
+      } else if (videoElement.volume < 0.5) {
+        volumeBtn.innerHTML = '<i class="fas fa-volume-down"></i>';
+      } else {
+        volumeBtn.innerHTML = '<i class="fas fa-volume-up"></i>';
+      }
+      
+      volumeSlider.style.width = `${videoElement.volume * 100}%`;
+    }
+
+    function toggleVideoSpeedOptions() {
+      document.getElementById("videoSpeedOptions").classList.toggle("active");
+    }
+
+    function changeVideoSpeed(e) {
+      const speed = parseFloat(e.target.dataset.speed);
+      videoPlaybackRate = speed;
+      videoElement.playbackRate = speed;
+      document.getElementById("videoSpeedBtn").textContent = `${speed}x`;
+      
+      // Update active state
+      document.querySelectorAll(".video-speed-option").forEach(option => {
+        option.classList.remove("active");
+      });
+      e.target.classList.add("active");
+      
+      // Close speed options
+      document.getElementById("videoSpeedOptions").classList.remove("active");
+    }
+
+    function toggleVideoFullscreen() {
+      if (!isVideoFullscreen) {
+        if (videoElement.requestFullscreen) {
+          videoElement.requestFullscreen();
+        } else if (videoElement.webkitRequestFullscreen) {
+          videoElement.webkitRequestFullscreen();
+        } else if (videoElement.msRequestFullscreen) {
+          videoElement.msRequestFullscreen();
+        }
+        isVideoFullscreen = true;
+        document.getElementById("videoFullscreen").innerHTML = '<i class="fas fa-compress"></i>';
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen();
+        } else if (document.webkitExitFullscreen) {
+          document.webkitExitFullscreen();
+        } else if (document.msExitFullscreen) {
+          document.msExitFullscreen();
+        }
+        isVideoFullscreen = false;
+        document.getElementById("videoFullscreen").innerHTML = '<i class="fas fa-expand"></i>';
+      }
+    }
+
+    function formatTime(seconds) {
+      const minutes = Math.floor(seconds / 60);
+      seconds = Math.floor(seconds % 60);
+      return `${minutes}:${seconds < 10 ? '0' : ''}${seconds}`;
+    }
+
+    function resetImageControls() {
+      // Reset image state
+      imageZoom = 1;
+      imageRotation = 0;
+      imageTranslateX = 0;
+      imageTranslateY = 0;
+      isImageDragging = false;
+      
+      // Update UI
+      document.getElementById("imageZoomLevel").textContent = "100%";
+      
+      // Setup image event listeners
+      setupImageEventListeners();
+    }
+
+    function setupImageEventListeners() {
+      // Zoom controls
+      document.getElementById("imageZoomIn").addEventListener("click", zoomImageIn);
+      document.getElementById("imageZoomOut").addEventListener("click", zoomImageOut);
+      document.getElementById("imageReset").addEventListener("click", resetImageTransform);
+      
+      // Rotation controls
+      document.getElementById("imageRotateLeft").addEventListener("click", rotateImageLeft);
+      document.getElementById("imageRotateRight").addEventListener("click", rotateImageRight);
+      
+      // Fullscreen
+      document.getElementById("imageFullscreen").addEventListener("click", toggleImageFullscreen);
+      
+      // Drag controls
+      imageElement.addEventListener("mousedown", startImageDrag);
+      imageElement.addEventListener("mousemove", dragImage);
+      imageElement.addEventListener("mouseup", endImageDrag);
+      imageElement.addEventListener("mouseleave", endImageDrag);
+      
+      // Touch controls for mobile
+      imageElement.addEventListener("touchstart", startImageDrag);
+      imageElement.addEventListener("touchmove", dragImage);
+      imageElement.addEventListener("touchend", endImageDrag);
+      
+      // Mouse wheel zoom
+      imageElement.addEventListener("wheel", handleImageWheel);
+    }
+
+    function zoomImageIn() {
+      imageZoom = Math.min(imageZoom + 0.1, 3);
+      updateImageTransform();
+    }
+
+    function zoomImageOut() {
+      imageZoom = Math.max(imageZoom - 0.1, 0.5);
+      updateImageTransform();
+    }
+
+    function resetImageTransform() {
+      imageZoom = 1;
+      imageRotation = 0;
+      imageTranslateX = 0;
+      imageTranslateY = 0;
+      updateImageTransform();
+    }
+
+    function rotateImageLeft() {
+      imageRotation -= 90;
+      updateImageTransform();
+    }
+
+    function rotateImageRight() {
+      imageRotation += 90;
+      updateImageTransform();
+    }
+
+    function updateImageTransform() {
+      imageElement.style.transform = `scale(${imageZoom}) rotate(${imageRotation}deg) translate(${imageTranslateX}px, ${imageTranslateY}px)`;
+      document.getElementById("imageZoomLevel").textContent = `${Math.round(imageZoom * 100)}%`;
+    }
+
+    function startImageDrag(e) {
+      isImageDragging = true;
+      
+      if (e.type === "touchstart") {
+        imageDragStartX = e.touches[0].clientX - imageTranslateX;
+        imageDragStartY = e.touches[0].clientY - imageTranslateY;
+      } else {
+        imageDragStartX = e.clientX - imageTranslateX;
+        imageDragStartY = e.clientY - imageTranslateY;
+      }
+      
+      imageElement.style.cursor = "grabbing";
+    }
+
+    function dragImage(e) {
+      if (!isImageDragging) return;
+      
+      e.preventDefault();
+      
+      if (e.type === "touchmove") {
+        imageTranslateX = e.touches[0].clientX - imageDragStartX;
+        imageTranslateY = e.touches[0].clientY - imageDragStartY;
+      } else {
+        imageTranslateX = e.clientX - imageDragStartX;
+        imageTranslateY = e.clientY - imageDragStartY;
+      }
+      
+      updateImageTransform();
+    }
+
+    function endImageDrag() {
+      isImageDragging = false;
+      imageElement.style.cursor = "grab";
+    }
+
+    function handleImageWheel(e) {
+      e.preventDefault();
+      
+      if (e.deltaY < 0) {
+        zoomImageIn();
+      } else {
+        zoomImageOut();
+      }
+    }
+
+    function toggleImageFullscreen() {
+      if (!document.fullscreenElement) {
+        imageElement.requestFullscreen().catch(err => {
+          console.error(`Error attempting to enable fullscreen: ${err.message}`);
+        });
+        document.getElementById("imageFullscreen").innerHTML = '<i class="fas fa-compress"></i>';
+      } else {
+        document.exitFullscreen();
+        document.getElementById("imageFullscreen").innerHTML = '<i class="fas fa-expand"></i>';
+      }
     }
 
     // Fungsi untuk membuka modal file non-media
@@ -1816,10 +3159,21 @@
 
     document.getElementById("sliderClose").addEventListener("click", () => {
       document.getElementById("sliderModal").classList.remove("active");
-      const vid = document.getElementById("sliderVideo");
-      vid.pause();
-      vid.src = "";
-      document.getElementById("sliderImage").src = "";
+      
+      // Pause video if playing
+      if (videoElement && !videoElement.paused) {
+        videoElement.pause();
+      }
+      
+      // Reset video src
+      if (videoElement) {
+        videoElement.src = "";
+      }
+      
+      // Reset image src
+      if (imageElement) {
+        imageElement.src = "";
+      }
     });
 
     document.getElementById("fileModalClose").addEventListener("click", () => {
@@ -1829,29 +3183,21 @@
     document.getElementById("sliderPrev").addEventListener("click", () => {
       if (document.getElementById("sliderImage").style.display === "block") {
         currentIndex = (currentIndex - 1 + images.length) % images.length;
-        document.getElementById("sliderImage").src = images[currentIndex];
+        openSliderImage(currentIndex);
       } else {
         currentIndex = (currentIndex - 1 + videos.length) % videos.length;
-        document.getElementById("sliderVideo").src = videos[currentIndex];
-        document.getElementById("sliderVideo").play();
+        openSliderVideo(currentIndex);
       }
     });
 
     document.getElementById("sliderNext").addEventListener("click", () => {
       if (document.getElementById("sliderImage").style.display === "block") {
         currentIndex = (currentIndex + 1) % images.length;
-        document.getElementById("sliderImage").src = images[currentIndex];
+        openSliderImage(currentIndex);
       } else {
         currentIndex = (currentIndex + 1) % videos.length;
-        document.getElementById("sliderVideo").src = videos[currentIndex];
-        document.getElementById("sliderVideo").play();
+        openSliderVideo(currentIndex);
       }
-    });
-
-    document.getElementById("playBtn").addEventListener("click", function () {
-      const vid = document.getElementById("sliderVideo");
-      vid.play();
-      this.style.display = "none";
     });
 
     window.onscroll = () => {
@@ -1861,6 +3207,10 @@
       } else {
         backToTop.classList.remove("visible");
       }
+      
+      // Parallax effect
+      const parallaxBg = document.getElementById("parallaxBg");
+      parallaxBg.style.transform = `translateY(${window.scrollY * 0.5}px)`;
     };
 
     document.getElementById("backToTop").addEventListener("click", () => {
@@ -1875,6 +3225,10 @@
         if (e.key === "ArrowRight") document.getElementById("sliderNext").click();
         else if (e.key === "ArrowLeft") document.getElementById("sliderPrev").click();
         else if (e.key === "Escape") document.getElementById("sliderClose").click();
+        else if (e.key === " " && videoElement) {
+          e.preventDefault();
+          toggleVideoPlayPause();
+        }
       } else if (fileModal.classList.contains("active")) {
         if (e.key === "Escape") document.getElementById("fileModalClose").click();
       }
@@ -1905,8 +3259,487 @@
       }
     });
 
+    // FAB (Floating Action Button) functionality
+    document.getElementById("fabToggle").addEventListener("click", function() {
+      const fabMenu = document.getElementById("fabMenu");
+      fabMenu.classList.toggle("active");
+      
+      // Rotate the plus icon
+      this.querySelector("i").classList.toggle("fa-plus");
+      this.querySelector("i").classList.toggle("fa-times");
+    });
+
+    // Slideshow functionality
+    document.getElementById("fabSlideshow").addEventListener("click", function() {
+      // Close FAB menu
+      document.getElementById("fabMenu").classList.remove("active");
+      document.getElementById("fabToggle").querySelector("i").classList.add("fa-plus");
+      document.getElementById("fabToggle").querySelector("i").classList.remove("fa-times");
+      
+      // Prepare slideshow items
+      slideshowItems = [];
+      
+      // Add images to slideshow
+      filteredFiles.forEach((metadata, index) => {
+        if (metadata.isImage) {
+          const fileIndex = fileMetadata.indexOf(metadata);
+          const file = allFiles[fileIndex];
+          slideshowItems.push({
+            type: 'image',
+            src: URL.createObjectURL(file),
+            metadata: metadata
+          });
+        }
+      });
+      
+      if (slideshowItems.length === 0) {
+        alert("Tidak ada gambar untuk slideshow.");
+        return;
+      }
+      
+      // Open slideshow modal
+      openSlideshow();
+    });
+
+    function openSlideshow() {
+      const slideshowModal = document.getElementById("slideshowModal");
+      const slideshowSlides = document.getElementById("slideshowSlides");
+      
+      // Clear previous slides
+      slideshowSlides.innerHTML = '';
+      
+      // Create slides
+      slideshowItems.forEach((item, index) => {
+        const slide = document.createElement("div");
+        slide.className = `slideshow-slide ${index === 0 ? 'active' : ''}`;
+        
+        if (item.type === 'image') {
+          const img = document.createElement("img");
+          img.className = "slideshow-image";
+          img.src = item.src;
+          slide.appendChild(img);
+        }
+        
+        slideshowSlides.appendChild(slide);
+      });
+      
+      // Reset slideshow state
+      slideshowCurrentIndex = 0;
+      slideshowProgress = 0;
+      
+      // Show modal
+      slideshowModal.classList.add("active");
+      
+      // Start slideshow
+      startSlideshow();
+    }
+
+    function startSlideshow() {
+      // Clear any existing interval
+      if (slideshowInterval) {
+        clearInterval(slideshowInterval);
+      }
+      
+      if (slideshowProgressInterval) {
+        clearInterval(slideshowProgressInterval);
+      }
+      
+      // Set progress bar to 0
+      document.getElementById("slideshowProgress").style.width = "0%";
+      slideshowProgress = 0;
+      
+      // Start progress bar animation
+      slideshowProgressInterval = setInterval(() => {
+        slideshowProgress += 1;
+        document.getElementById("slideshowProgress").style.width = `${slideshowProgress}%`;
+        
+        if (slideshowProgress >= 100) {
+          clearInterval(slideshowProgressInterval);
+        }
+      }, 50); // 5 seconds total (5000ms / 50ms = 100 steps)
+      
+      // Set interval for changing slides
+      slideshowInterval = setInterval(() => {
+        nextSlide();
+      }, 5000); // Change slide every 5 seconds
+    }
+
+    function nextSlide() {
+      const slides = document.querySelectorAll(".slideshow-slide");
+      
+      // Hide current slide
+      slides[slideshowCurrentIndex].classList.remove("active");
+      
+      // Move to next slide
+      slideshowCurrentIndex = (slideshowCurrentIndex + 1) % slides.length;
+      
+      // Show next slide
+      slides[slideshowCurrentIndex].classList.add("active");
+      
+      // Restart progress bar
+      if (slideshowProgressInterval) {
+        clearInterval(slideshowProgressInterval);
+      }
+      
+      document.getElementById("slideshowProgress").style.width = "0%";
+      slideshowProgress = 0;
+      
+      slideshowProgressInterval = setInterval(() => {
+        slideshowProgress += 1;
+        document.getElementById("slideshowProgress").style.width = `${slideshowProgress}%`;
+        
+        if (slideshowProgress >= 100) {
+          clearInterval(slideshowProgressInterval);
+        }
+      }, 50);
+    }
+
+    function prevSlide() {
+      const slides = document.querySelectorAll(".slideshow-slide");
+      
+      // Hide current slide
+      slides[slideshowCurrentIndex].classList.remove("active");
+      
+      // Move to previous slide
+      slideshowCurrentIndex = (slideshowCurrentIndex - 1 + slides.length) % slides.length;
+      
+      // Show previous slide
+      slides[slideshowCurrentIndex].classList.add("active");
+      
+      // Restart progress bar
+      if (slideshowProgressInterval) {
+        clearInterval(slideshowProgressInterval);
+      }
+      
+      document.getElementById("slideshowProgress").style.width = "0%";
+      slideshowProgress = 0;
+      
+      slideshowProgressInterval = setInterval(() => {
+        slideshowProgress += 1;
+        document.getElementById("slideshowProgress").style.width = `${slideshowProgress}%`;
+        
+        if (slideshowProgress >= 100) {
+          clearInterval(slideshowProgressInterval);
+        }
+      }, 50);
+    }
+
+    // Slideshow controls
+    document.getElementById("slideshowClose").addEventListener("click", function() {
+      document.getElementById("slideshowModal").classList.remove("active");
+      
+      // Clear intervals
+      if (slideshowInterval) {
+        clearInterval(slideshowInterval);
+      }
+      
+      if (slideshowProgressInterval) {
+        clearInterval(slideshowProgressInterval);
+      }
+    });
+
+    document.getElementById("slideshowPlay").addEventListener("click", function() {
+      startSlideshow();
+    });
+
+    document.getElementById("slideshowPause").addEventListener("click", function() {
+      // Clear intervals
+      if (slideshowInterval) {
+        clearInterval(slideshowInterval);
+      }
+      
+      if (slideshowProgressInterval) {
+        clearInterval(slideshowProgressInterval);
+      }
+    });
+
+    document.getElementById("slideshowFullscreen").addEventListener("click", function() {
+      const slideshowContainer = document.querySelector(".slideshow-container");
+      
+      if (document.fullscreenElement) {
+        document.exitFullscreen();
+      } else {
+        slideshowContainer.requestFullscreen().catch(err => {
+          console.error(`Error attempting to enable fullscreen: ${err.message}`);
+        });
+      }
+    });
+
+    // Keyboard navigation for slideshow
+    document.addEventListener("keydown", function(e) {
+      const slideshowModal = document.getElementById("slideshowModal");
+      
+      if (slideshowModal.classList.contains("active")) {
+        if (e.key === "ArrowRight") nextSlide();
+        else if (e.key === "ArrowLeft") prevSlide();
+        else if (e.key === "Escape") document.getElementById("slideshowClose").click();
+        else if (e.key === " ") {
+          e.preventDefault();
+          if (slideshowInterval) {
+            document.getElementById("slideshowPause").click();
+          } else {
+            document.getElementById("slideshowPlay").click();
+          }
+        }
+      }
+    });
+
+    // Share functionality
+    document.getElementById("fabShare").addEventListener("click", function() {
+      // Close FAB menu
+      document.getElementById("fabMenu").classList.remove("active");
+      document.getElementById("fabToggle").querySelector("i").classList.add("fa-plus");
+      document.getElementById("fabToggle").querySelector("i").classList.remove("fa-times");
+      
+      // Create shareable link (in a real app, this would generate a unique URL)
+      const shareUrl = window.location.href;
+      
+      if (navigator.share) {
+        navigator.share({
+          title: 'Galeri Media Premium',
+          text: 'Lihat koleksi media saya',
+          url: shareUrl
+        })
+        .then(() => console.log('Berhasil berbagi'))
+        .catch((error) => console.log('Error berbagi:', error));
+      } else {
+        // Fallback for browsers that don't support Web Share API
+        const dummy = document.createElement('input');
+        document.body.appendChild(dummy);
+        dummy.value = shareUrl;
+        dummy.select();
+        document.execCommand('copy');
+        document.body.removeChild(dummy);
+        
+        // Show notification
+        const notification = document.createElement('div');
+        notification.className = 'notification';
+        notification.textContent = 'Link telah disalin ke clipboard!';
+        notification.style.position = 'fixed';
+        notification.style.bottom = '2rem';
+        notification.style.left = '50%';
+        notification.style.transform = 'translateX(-50%)';
+        notification.style.backgroundColor = 'var(--success-color)';
+        notification.style.color = 'white';
+        notification.style.padding = '1rem 2rem';
+        notification.style.borderRadius = 'var(--radius)';
+        notification.style.boxShadow = 'var(--shadow-lg)';
+        notification.style.zIndex = '9999';
+        
+        document.body.appendChild(notification);
+        
+        setTimeout(() => {
+          notification.style.opacity = '0';
+          notification.style.transition = 'opacity 0.5s ease-out';
+          setTimeout(() => {
+            document.body.removeChild(notification);
+          }, 500);
+        }, 3000);
+      }
+    });
+
+    // Export functionality
+    document.getElementById("fabExport").addEventListener("click", function() {
+      // Close FAB menu
+      document.getElementById("fabMenu").classList.remove("active");
+      document.getElementById("fabToggle").querySelector("i").classList.add("fa-plus");
+      document.getElementById("fabToggle").querySelector("i").classList.remove("fa-times");
+      
+      // Create export options modal
+      const exportModal = document.createElement('div');
+      exportModal.className = 'modal active';
+      exportModal.innerHTML = `
+        <div class="modal-content">
+          <div class="modal-header">
+            <h3 class="modal-title">Ekspor Galeri</h3>
+            <button class="modal-close" id="exportModalClose">
+              <i class="fas fa-times"></i>
+            </button>
+          </div>
+          <div class="modal-body">
+            <p>Pilih format ekspor:</p>
+            <div class="export-options">
+              <button class="btn btn-primary" id="exportJson">
+                <i class="fas fa-code"></i> JSON
+              </button>
+              <button class="btn btn-primary" id="exportCsv">
+                <i class="fas fa-file-csv"></i> CSV
+              </button>
+              <button class="btn btn-primary" id="exportHtml">
+                <i class="fas fa-file-code"></i> HTML
+              </button>
+            </div>
+          </div>
+        </div>
+      `;
+      
+      document.body.appendChild(exportModal);
+      
+      // Close modal handler
+      document.getElementById("exportModalClose").addEventListener("click", function() {
+        document.body.removeChild(exportModal);
+      });
+      
+      // Export handlers
+      document.getElementById("exportJson").addEventListener("click", function() {
+        exportAsJson();
+        document.body.removeChild(exportModal);
+      });
+      
+      document.getElementById("exportCsv").addEventListener("click", function() {
+        exportAsCsv();
+        document.body.removeChild(exportModal);
+      });
+      
+      document.getElementById("exportHtml").addEventListener("click", function() {
+        exportAsHtml();
+        document.body.removeChild(exportModal);
+      });
+    });
+
+    function exportAsJson() {
+      const exportData = filteredFiles.map(metadata => {
+        return {
+          name: metadata.name,
+          size: metadata.size,
+          sizeFormatted: metadata.sizeFormatted,
+          type: metadata.type,
+          lastModified: metadata.lastModified,
+          extension: metadata.extension,
+          path: metadata.path,
+          category: metadata.category
+        };
+      });
+      
+      const dataStr = JSON.stringify(exportData, null, 2);
+      const dataUri = 'data:application/json;charset=utf-8,'+ encodeURIComponent(dataStr);
+      
+      const exportFileDefaultName = 'galeri-media.json';
+      
+      const linkElement = document.createElement('a');
+      linkElement.setAttribute('href', dataUri);
+      linkElement.setAttribute('download', exportFileDefaultName);
+      linkElement.click();
+    }
+
+    function exportAsCsv() {
+      let csvContent = "Name,Size,Type,Last Modified,Extension,Path,Category\n";
+      
+      filteredFiles.forEach(metadata => {
+        const row = [
+          metadata.name,
+          metadata.size,
+          metadata.type,
+          new Date(metadata.lastModified).toISOString(),
+          metadata.extension,
+          metadata.path,
+          metadata.category
+        ].join(',');
+        
+        csvContent += row + "\n";
+      });
+      
+      const dataUri = 'data:text/csv;charset=utf-8,'+ encodeURIComponent(csvContent);
+      
+      const exportFileDefaultName = 'galeri-media.csv';
+      
+      const linkElement = document.createElement('a');
+      linkElement.setAttribute('href', dataUri);
+      linkElement.setAttribute('download', exportFileDefaultName);
+      linkElement.click();
+    }
+
+    function exportAsHtml() {
+      let htmlContent = `
+        <!DOCTYPE html>
+        <html lang="id">
+        <head>
+          <meta charset="UTF-8">
+          <title>Galeri Media</title>
+          <style>
+            body {
+              font-family: 'Inter', sans-serif;
+              margin: 0;
+              padding: 20px;
+              background-color: #f8fafc;
+              color: #1e293b;
+            }
+            h1 {
+              color: #2563eb;
+            }
+            table {
+              width: 100%;
+              border-collapse: collapse;
+              margin-top: 20px;
+            }
+            th, td {
+              padding: 12px 15px;
+              text-align: left;
+              border-bottom: 1px solid #e2e8f0;
+            }
+            th {
+              background-color: #f1f5f9;
+              font-weight: 600;
+            }
+            tr:hover {
+              background-color: #f8fafc;
+            }
+          </style>
+        </head>
+        <body>
+          <h1>Galeri Media</h1>
+          <p>Total ${filteredFiles.length} file</p>
+          <table>
+            <thead>
+              <tr>
+                <th>Nama</th>
+                <th>Ukuran</th>
+                <th>Tipe</th>
+                <th>Tanggal Dimodifikasi</th>
+                <th>Ekstensi</th>
+                <th>Kategori</th>
+              </tr>
+            </thead>
+            <tbody>
+      `;
+      
+      filteredFiles.forEach(metadata => {
+        htmlContent += `
+          <tr>
+            <td>${metadata.name}</td>
+            <td>${metadata.sizeFormatted}</td>
+            <td>${metadata.type}</td>
+            <td>${new Date(metadata.lastModified).toLocaleString()}</td>
+            <td>${metadata.extension}</td>
+            <td>${metadata.category}</td>
+          </tr>
+        `;
+      });
+      
+      htmlContent += `
+            </tbody>
+          </table>
+        </body>
+        </html>
+      `;
+      
+      const dataUri = 'data:text/html;charset=utf-8,'+ encodeURIComponent(htmlContent);
+      
+      const exportFileDefaultName = 'galeri-media.html';
+      
+      const linkElement = document.createElement('a');
+      linkElement.setAttribute('href', dataUri);
+      linkElement.setAttribute('download', exportFileDefaultName);
+      linkElement.click();
+    }
+
     // Inisialisasi tema
     document.addEventListener("DOMContentLoaded", function() {
+      // Hide loading screen after page loads
+      setTimeout(() => {
+        document.getElementById("loadingScreen").classList.add("hidden");
+      }, 1000);
+      
       // Cek preferensi tema yang tersimpan
       const savedTheme = localStorage.getItem("theme");
       if (savedTheme === "dark") {
